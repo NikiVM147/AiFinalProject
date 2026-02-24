@@ -16,6 +16,20 @@ export function formatDate(date, options = { dateStyle: 'medium' }) {
 }
 
 /**
+ * Formats cents into a currency string (default: EUR).
+ * @param {number} cents
+ * @param {string} [currency]
+ * @returns {string}
+ */
+export function formatPrice(cents, currency = 'EUR') {
+  const value = (Number(cents) || 0) / 100;
+  return new Intl.NumberFormat(navigator.language, {
+    style: 'currency',
+    currency,
+  }).format(value);
+}
+
+/**
  * Capitalises the first letter of a string.
  * @param {string} str
  * @returns {string}

@@ -7,9 +7,12 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: resolve(__dirname, 'index.html'),
-        // Add additional pages here as your app grows, e.g.:
-        // about: resolve(__dirname, 'src/pages/about.html'),
-        // contact: resolve(__dirname, 'src/pages/contact.html'),
+        products: resolve(__dirname, 'src/pages/products.html'),
+        productDetail: resolve(__dirname, 'src/pages/product-detail.html'),
+        cart: resolve(__dirname, 'src/pages/cart.html'),
+        checkout: resolve(__dirname, 'src/pages/checkout.html'),
+        login: resolve(__dirname, 'src/pages/login.html'),
+        account: resolve(__dirname, 'src/pages/account.html'),
       },
     },
     outDir: 'dist',

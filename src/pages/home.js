@@ -1,8 +1,5 @@
-/**
- * home.js
- * Entry point for the Home page.
- */
+import { renderLayout } from './partials/layout.js';
 
-export default function initHome() {
-  console.log('[home] Page initialised.');
+export default async function initHome() {
+  await renderLayout({ title: 'Moto Gear Store', active: 'home' });
 }

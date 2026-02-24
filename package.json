@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
-    "@popperjs/core": "^2.11.8"
+    "@popperjs/core": "^2.11.8",
+    "@supabase/supabase-js": "^2.49.1"
   }
 }

@@ -1,9 +1,4 @@
-/* Global custom styles — override Bootstrap variables here */
-
-:root {
-  --bs-primary: #0d6efd;
-  --bs-font-sans-serif: 'Segoe UI', system-ui, sans-serif;
-}
+/* Global custom styles */
 
 body {
   min-height: 100vh;

@@ -1,25 +1,35 @@
 /**
  * router.js
- * Simple client-side router that maps the current path to a page initialiser.
- * Add a new entry to `routes` for each page you create under /src/pages/.
+ * MPA-friendly router: loads page module based on <body data-page="...">.
+ * Fallbacks to pathname mapping for the root index.
  */
 
-const routes = {
+const byPage = {
+  home: () => import('./home.js'),
+  products: () => import('./products.js'),
+  'product-detail': () => import('./product-detail.js'),
+  cart: () => import('./cart.js'),
+  checkout: () => import('./checkout.js'),
+  login: () => import('./login.js'),
+  account: () => import('./account.js'),
+};
+
+const byPath = {
   '/': () => import('./home.js'),
-  // '/about':   () => import('./about.js'),
-  // '/contact': () => import('./contact.js'),
 };
 
 export async function initPage() {
-  const path = window.location.pathname.replace(/\.html$/, '') || '/';
-  const loader = routes[path] ?? routes['/'];
+  const page = document.body?.dataset?.page;
+  const path = window.location.pathname || '/';
+
+  const loader = (page && byPage[page]) || byPath[path] || byPage.home;
 
   try {
     const module = await loader();
     if (typeof module.default === 'function') {
-      module.default();
+      await module.default();
     }
   } catch (err) {
-    console.error(`[router] Failed to load page module for "${path}":`, err);
+    console.error('[router] Failed to load page module:', err);
   }
 }

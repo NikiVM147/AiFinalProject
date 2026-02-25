@@ -11,6 +11,7 @@ const byPage = {
   cart: () => import('./cart.js'),
   checkout: () => import('./checkout.js'),
   login: () => import('./login.js'),
+  register: () => import('./register.js'),
   account: () => import('./account.js'),
 };
 

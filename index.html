@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -10,20 +10,18 @@
     <header id="mg-nav"></header>
 
     <!-- Main Content -->
-    <main class="container my-5">
-      <div class="row justify-content-center">
-        <div class="col-lg-8 text-center">
-          <h1 class="display-4 fw-bold mb-3">Moto Gear Store</h1>
-          <p class="lead text-muted mb-4">
-            Browse helmets, jackets, gloves and more.
-          </p>
-          <a href="/src/pages/products.html" class="btn btn-primary btn-lg">Browse products</a>
+    <main>
+      <section class="mg-hero">
+        <div class="container">
+          <h1>Ride with <span>Confidence</span></h1>
+          <p class="lead">Premium motorcycle gear &mdash; helmets, jackets, gloves &amp; more.</p>
+          <a href="/src/pages/products.html" class="btn btn-primary">Shop Now</a>
         </div>
-      </div>
+      </section>
     </main>
 
     <!-- Footer -->
-    <footer id="mg-footer" class="footer mt-auto py-3 bg-light border-top"></footer>
+    <footer id="mg-footer" class="mg-footer"></footer>
 
     <!-- Vite entry point (Bootstrap JS + app logic) -->
     <script type="module" src="/src/main.js"></script>

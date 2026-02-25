@@ -27,7 +27,7 @@ export default async function initCheckout() {
   const items = cart.items ?? [];
 
   if (!items.length) {
-    summaryEl.innerHTML = `<div class="alert alert-light border">Your cart is empty.</div>`;
+    summaryEl.innerHTML = `<div class="alert alert-secondary">Your cart is empty.</div>`;
     form.classList.add('d-none');
     return;
   }

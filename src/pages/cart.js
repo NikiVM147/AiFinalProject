@@ -22,7 +22,7 @@ export default async function initCart() {
 
       if (!items.length) {
         root.innerHTML = `
-          <div class="alert alert-light border">Your cart is empty.</div>
+          <div class="alert alert-secondary">Your cart is empty.</div>
           <a class="btn btn-primary" href="/src/pages/products.html">Browse products</a>
         `;
         return;

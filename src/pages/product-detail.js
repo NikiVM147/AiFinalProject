@@ -30,31 +30,28 @@ export default async function initProductDetail() {
     root.innerHTML = `
       <div class="row g-4">
         <div class="col-lg-6">
-          <div class="card">
-            ${
-              imageUrl
-                ? `<img src="${imageUrl}" class="card-img-top" alt="${product.images?.[0]?.alt ?? product.name}" style="object-fit: cover; height: 420px" />`
-                : `<div class="bg-light" style="height: 420px"></div>`
+          <div class="card p-0 overflow-hidden">
+            ${imageUrl
+                ? `<img src="${imageUrl}" class="w-100" alt="${product.images?.[0]?.alt ?? product.name}" style="object-fit: cover; height: 420px; display:block;" />`
+                : `<div class="mg-img-placeholder" style="height: 420px"></div>`
             }
           </div>
         </div>
         <div class="col-lg-6">
-          <h1 class="h3 mb-2">${product.name}</h1>
-          <div class="text-muted mb-2">${product.category?.name ?? ''}</div>
-          <div class="h4 fw-semibold mb-3">${formatPrice(product.price_cents, product.currency)}</div>
+          <p class="text-muted small mb-1">${product.category?.name ?? ''}</p>
+          <h1 class="h3 fw-bold mb-2">${product.name}</h1>
+          <div class="mg-price h4 mb-3">${formatPrice(product.price_cents, product.currency)}</div>
 
-          <p class="text-muted">${product.description ?? ''}</p>
+          <p class="text-muted mb-4">${product.description ?? ''}</p>
 
-          <div class="d-flex align-items-center gap-2">
-            <button id="mg-add" class="btn btn-primary">Add to cart</button>
+          <div class="d-flex align-items-center gap-2 mb-3">
+            <button id="mg-add" class="btn btn-primary px-4">Add to cart</button>
             <a href="/src/pages/cart.html" class="btn btn-outline-secondary">Go to cart</a>
           </div>
 
-          <div class="mt-3">
-            <span class="badge text-bg-${product.stock > 0 ? 'success' : 'secondary'}">
-              ${product.stock > 0 ? 'In stock' : 'Out of stock'}
-            </span>
-          </div>
+          <span class="badge text-bg-${product.stock > 0 ? 'success' : 'secondary'}">
+            ${product.stock > 0 ? 'In stock' : 'Out of stock'}
+          </span>
         </div>
       </div>
     `;

@@ -10,16 +10,17 @@ function renderProductCard(product) {
 
   return `
     <div class="col-12 col-sm-6 col-lg-4">
-      <div class="card h-100">
-        ${
-          imageUrl
-            ? `<img src="${imageUrl}" class="card-img-top" alt="${product.images?.[0]?.alt ?? product.name}" style="object-fit: cover; height: 220px" />`
-            : `<div class="bg-light border-bottom" style="height: 220px"></div>`
-        }
+      <div class="card h-100 mg-product-card">
+        <div class="mg-card-img-wrap">
+          ${imageUrl
+            ? `<img src="${imageUrl}" alt="${product.images?.[0]?.alt ?? product.name}" />`
+            : `<div class="mg-img-placeholder"></div>`
+          }
+        </div>
         <div class="card-body d-flex flex-column">
-          <h3 class="h6 card-title mb-1">${product.name}</h3>
-          <div class="text-muted small mb-2">${product.category?.name ?? ''}</div>
-          <div class="fw-semibold mb-3">${formatPrice(product.price_cents, product.currency)}</div>
+          <h3 class="card-title">${product.name}</h3>
+          <div class="mg-category">${product.category?.name ?? ''}</div>
+          <div class="mg-price">${formatPrice(product.price_cents, product.currency)}</div>
 
           <div class="mt-auto d-flex gap-2">
             <a class="btn btn-outline-secondary btn-sm" href="/src/pages/product-detail.html?slug=${encodeURIComponent(product.slug)}">Details</a>

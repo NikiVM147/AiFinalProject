@@ -83,6 +83,8 @@ export async function getProductBySlug(slug) {
 
 export function getProductImageUrl(path) {
   if (!path) return null;
+  // Support full external URLs stored in seed data
+  if (path.startsWith('http://') || path.startsWith('https://')) return path;
   const { data } = supabase.storage.from('product-images').getPublicUrl(path);
   return data?.publicUrl ?? null;
 }

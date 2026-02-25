@@ -28,6 +28,20 @@
       <div id="mg-products-error" class="alert alert-danger mt-3 d-none"></div>
     </main>
 
+    <!-- Product Quick-View Modal -->
+    <div class="modal fade" id="mg-product-modal" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content mg-modal-content">
+          <div class="modal-header mg-modal-header border-0 pb-0">
+            <h5 class="modal-title fw-bold" id="mg-modal-title"></h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="mg-modal-body"></div>
+          <div class="modal-footer mg-modal-footer border-0 pt-0" id="mg-modal-footer"></div>
+        </div>
+      </div>
+    </div>
+
     <footer id="mg-footer" class="mg-footer"></footer>
 
     <script type="module" src="/src/main.js"></script>

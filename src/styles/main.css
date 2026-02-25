@@ -290,3 +290,82 @@ a { transition: color .15s; }
 ::-webkit-scrollbar { width: 7px; background: var(--mg-bg-nav); }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,.1); border-radius: 4px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--mg-red); }
+
+/* ── Product Quick-View Modal ───────────────────────────────── */
+.mg-modal-content {
+  background-color: var(--mg-bg-card);
+  border: 1px solid var(--mg-border);
+  border-radius: var(--mg-radius) !important;
+  overflow: hidden;
+}
+.mg-modal-header { background-color: var(--mg-bg-nav); padding: 1rem 1.35rem .75rem; }
+.mg-modal-footer { background-color: var(--mg-bg-nav); padding: .75rem 1.35rem 1rem; }
+
+.mg-modal-img-col { background-color: var(--mg-bg); }
+.mg-modal-img {
+  display: block;
+  width: 100%;
+  height: 360px;
+  object-fit: cover;
+}
+@media (max-width: 767.98px) {
+  .mg-modal-img { height: 240px; }
+}
+
+/* Carousel dark overlays for controls */
+.mg-modal-content .carousel-control-prev,
+.mg-modal-content .carousel-control-next {
+  width: 2.5rem;
+  background: rgba(0,0,0,.45);
+  border-radius: var(--mg-radius-sm);
+  top: 50%;
+  transform: translateY(-50%);
+  height: 2.5rem;
+  margin: 0 .35rem;
+  opacity: .85;
+  transition: opacity .2s;
+}
+.mg-modal-content .carousel-control-prev:hover,
+.mg-modal-content .carousel-control-next:hover { opacity: 1; }
+.mg-modal-content .carousel-indicators { bottom: .6rem; }
+.mg-modal-content .carousel-indicators [data-bs-slide-to] {
+  width: 8px; height: 8px; border-radius: 50%;
+  background-color: rgba(255,255,255,.55);
+  border: none;
+}
+.mg-modal-content .carousel-indicators .active { background-color: var(--mg-red); }
+
+/* Card image hover overlay for quick-view hint */
+.mg-card-img-wrap {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.mg-card-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .25s;
+}
+.mg-card-img-wrap:hover .mg-card-img-overlay { background: rgba(0,0,0,.45); }
+.mg-quickview-hint {
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--mg-red);
+  padding: .35rem 1rem;
+  border-radius: var(--mg-radius-sm);
+  opacity: 0;
+  transform: translateY(6px);
+  transition: opacity .22s, transform .22s;
+}
+.mg-card-img-wrap:hover .mg-quickview-hint {
+  opacity: 1;
+  transform: translateY(0);
+}
+

@@ -4,6 +4,7 @@ export async function getCategories() {
   const { data, error } = await supabase
     .from('categories')
     .select('*')
+    .neq('slug', 'rain-gear')
     .order('name', { ascending: true });
 
   if (error) throw error;
@@ -47,10 +48,12 @@ export async function getProducts({ categorySlug } = {}) {
   if (error) throw error;
 
   // Ensure images are sorted in JS (Supabase nested ordering can be tricky)
-  return (data ?? []).map((p) => ({
-    ...p,
-    images: (p.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order),
-  }));
+  return (data ?? [])
+    .filter((p) => p?.category?.slug !== 'rain-gear')
+    .map((p) => ({
+      ...p,
+      images: (p.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order),
+    }));
 }
 
 export async function getProductBySlug(slug) {
@@ -75,6 +78,10 @@ export async function getProductBySlug(slug) {
 
   if (error) throw error;
 
+  if (data?.category?.slug === 'rain-gear') {
+    throw new Error('Product not found');
+  }
+
   return {
     ...data,
     images: (data.images ?? []).slice().sort((a, b) => a.sort_order - b.sort_order),
@@ -85,6 +92,8 @@ export function getProductImageUrl(path) {
   if (!path) return null;
   // Support full external URLs stored in seed data
   if (path.startsWith('http://') || path.startsWith('https://')) return path;
+  // Support local public assets (e.g. /images/gear/helmet-1.svg)
+  if (path.startsWith('/')) return path;
   const { data } = supabase.storage.from('product-images').getPublicUrl(path);
   return data?.publicUrl ?? null;
 }

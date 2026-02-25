@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Каска</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M92 292c0-94 74-170 164-170s164 76 164 170" />
+    <path d="M126 292h260" />
+    <path d="M140 292c0 64 52 116 116 116h46" />
+    <path d="M302 408c56 0 102-46 102-102" />
+    <path d="M206 252h214c-22-66-84-114-156-114-71 0-132 46-156 114h98z" />
+    <path d="M206 252c-14 34-20 68-20 102" />
+    <path d="M336 264l64 36" />
+    <path d="M268 408h-40" />
+  </g>
+</svg>

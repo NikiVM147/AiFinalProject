@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Верига с катинар</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M176 312c-26 0-48-22-48-48v-32c0-26 22-48 48-48h40" />
+    <path d="M296 184h40c26 0 48 22 48 48v32c0 26-22 48-48 48" />
+    <path d="M212 256h88" />
+    <path d="M230 336v-34c0-14 12-26 26-26h0c14 0 26 12 26 26v34" />
+    <path d="M214 336h84v84h-84z" />
+    <path d="M136 344l-28 28" />
+    <path d="M376 344l28 28" />
+  </g>
+</svg>

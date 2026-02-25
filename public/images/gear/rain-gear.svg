@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Дъждобран</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M176 116l-58 64 34 88v150c0 18 14 32 32 32h144c18 0 32-14 32-32V268l34-88-58-64" />
+    <path d="M176 116l80 40 80-40" />
+    <path d="M256 192v258" />
+    <path d="M104 110c0 0-24 26-24 42a24 24 0 0 0 48 0c0-16-24-42-24-42z" />
+    <path d="M144 86c0 0-24 26-24 42a24 24 0 0 0 48 0c0-16-24-42-24-42z" />
+    <path d="M188 110c0 0-24 26-24 42a24 24 0 0 0 48 0c0-16-24-42-24-42z" />
+  </g>
+</svg>

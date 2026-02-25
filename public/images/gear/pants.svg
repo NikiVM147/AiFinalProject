@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Мото панталони</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M170 120h172l-26 306c-2 22-20 38-42 38h-28l-22-160-22 160h-28c-22 0-40-16-42-38l-26-306z" />
+    <path d="M210 120v86" />
+    <path d="M302 120v86" />
+    <path d="M202 260h108" />
+  </g>
+</svg>

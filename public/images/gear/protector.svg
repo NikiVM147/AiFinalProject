@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Протектор</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M256 96c70 36 140 36 180 44v136c0 118-78 186-180 230C154 462 76 394 76 276V140c40-8 110-8 180-44z" />
+    <path d="M256 160v278" />
+    <path d="M168 220h176" />
+    <path d="M180 290h152" />
+  </g>
+</svg>

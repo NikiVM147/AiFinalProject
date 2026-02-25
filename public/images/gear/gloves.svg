@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Мото ръкавици</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M194 168v96" />
+    <path d="M232 156v118" />
+    <path d="M270 156v118" />
+    <path d="M308 168v92" />
+    <path d="M172 264c0 78 52 140 116 140s116-62 116-140" />
+    <path d="M172 264l-26 46c-12 22 2 50 26 50h232c24 0 38-28 26-50l-26-46" />
+    <path d="M210 404c18 18 44 28 78 28" />
+  </g>
+</svg>

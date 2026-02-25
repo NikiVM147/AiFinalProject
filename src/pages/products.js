@@ -4,6 +4,12 @@ import { getCategories, getProducts, getProductImageUrl } from '@services/produc
 import { addToCart } from '@services/cart.js';
 import { formatPrice } from '@utils/helpers.js';
 import { showToast } from '@utils/toast.js';
+import {
+  filterCategoriesByStyle,
+  filterProductsByStyle,
+  getSelectedStyle,
+  getStyleById,
+} from '@utils/gear-style.js';
 
 /** Map of slug → product, filled after each load() */
 const productMap = new Map();
@@ -143,6 +149,13 @@ function renderProductCard(product) {
 }
 
 export default async function initProducts() {
+  const selectedStyleId = getSelectedStyle();
+  if (!selectedStyleId) {
+    window.location.href = '/src/pages/styles.html';
+    return;
+  }
+
+  const selectedStyle = getStyleById(selectedStyleId);
   await renderLayout({ title: 'Products — Moto Gear Store', active: 'products' });
 
   const select = document.getElementById('category');
@@ -156,7 +169,8 @@ export default async function initProducts() {
 
     try {
       const categorySlug = select.value || undefined;
-      const products = await getProducts({ categorySlug });
+      const productsRaw = await getProducts({ categorySlug });
+      const products = filterProductsByStyle(productsRaw, selectedStyleId);
 
       productMap.clear();
       (products ?? []).forEach((p) => productMap.set(p.slug, p));
@@ -203,8 +217,10 @@ export default async function initProducts() {
   }
 
   try {
-    const categories = await getCategories();
-    select.innerHTML = `<option value="">All</option>${(categories ?? [])
+    const categoriesRaw = await getCategories();
+    const categories = filterCategoriesByStyle(categoriesRaw, selectedStyleId);
+    const styleSuffix = selectedStyle?.label ? ` — ${selectedStyle.label}` : '';
+    select.innerHTML = `<option value="">All${styleSuffix}</option>${(categories ?? [])
       .map((c) => `<option value="${c.slug}">${c.name}</option>`)
       .join('')}`;
   } catch {

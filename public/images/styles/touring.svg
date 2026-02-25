@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+  <title>Туринг екипировка</title>
+  <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wheels -->
+    <circle cx="160" cy="370" r="56" />
+    <circle cx="374" cy="370" r="56" />
+
+    <!-- touring bike -->
+    <path d="M210 270h120l46 50" />
+    <path d="M210 270l-44 58" />
+    <path d="M246 228h78l20 42" />
+    <path d="M324 228l26-18" />
+    <path d="M190 328h200" />
+
+    <!-- windshield -->
+    <path d="M270 212l26-46h34" />
+
+    <!-- luggage boxes -->
+    <rect x="320" y="258" width="62" height="46" rx="8" />
+    <rect x="260" y="258" width="52" height="46" rx="8" />
+
+    <!-- road -->
+    <path d="M78 424h356" />
+  </g>
+</svg>

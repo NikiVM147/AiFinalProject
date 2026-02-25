@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Интерком</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M154 214c0-56 46-102 102-102h0c56 0 102 46 102 102v116c0 24-20 44-44 44h-56" />
+    <path d="M154 214v62" />
+    <path d="M118 250h36" />
+    <path d="M358 250h36" />
+    <path d="M258 374v24c0 28-22 50-50 50h-22" />
+    <path d="M198 448h-46" />
+    <path d="M316 214c0-34-28-62-62-62" />
+    <path d="M206 306h108" />
+  </g>
+</svg>

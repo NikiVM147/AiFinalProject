@@ -141,6 +141,11 @@ a { transition: color .15s; }
 .mg-img-placeholder {
   background: linear-gradient(135deg, #1a1a28 0%, #2c2c44 100%);
 }
+.mg-style-card .mg-card-img-wrap img {
+  object-fit: contain;
+  padding: 26px;
+  background-color: var(--mg-bg-input);
+}
 .mg-product-card .card-title { font-size: .95rem; font-weight: 600; margin-bottom: .15rem; }
 .mg-category { font-size: .78rem; color: var(--mg-text-muted); margin-bottom: .55rem; }
 .mg-price { color: var(--mg-red); font-weight: 700; font-size: 1.05rem; margin-bottom: .9rem; }

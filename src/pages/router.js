@@ -6,6 +6,7 @@
 
 const byPage = {
   home: () => import('./home.js'),
+  styles: () => import('./styles.js'),
   products: () => import('./products.js'),
   'product-detail': () => import('./product-detail.js'),
   cart: () => import('./cart.js'),

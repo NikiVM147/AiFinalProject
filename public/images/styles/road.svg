@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+  <title>Шосейна екипировка</title>
+  <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wheels -->
+    <circle cx="150" cy="368" r="58" />
+    <circle cx="382" cy="368" r="58" />
+
+    <!-- sportbike silhouette -->
+    <path d="M220 250h86l44 52" />
+    <path d="M220 250l-42 58" />
+    <path d="M254 210h58l22 40" />
+    <path d="M302 210l24-18" />
+    <path d="M184 308h192" />
+    <path d="M314 262l-18 60" />
+    <path d="M210 262l-28 60" />
+
+    <!-- fairing line -->
+    <path d="M256 232c18 0 40 8 56 22" />
+
+    <!-- road -->
+    <path d="M76 424h360" />
+  </g>
+</svg>

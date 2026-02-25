@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+  <title>Градска екипировка</title>
+  <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wheels -->
+    <circle cx="170" cy="372" r="54" />
+    <circle cx="356" cy="372" r="54" />
+
+    <!-- scooter / urban silhouette -->
+    <path d="M236 214h66c22 0 40 18 40 40v44" />
+    <path d="M342 298h-76" />
+    <path d="M236 214l-32 58" />
+    <path d="M204 272h-30" />
+    <path d="M174 272l-28 68" />
+    <path d="M266 298l-22 58" />
+
+    <!-- handlebar -->
+    <path d="M278 214l26-20" />
+
+    <!-- simple city blocks -->
+    <rect x="68" y="120" width="46" height="78" rx="6" />
+    <rect x="120" y="92" width="52" height="106" rx="6" />
+    <rect x="178" y="132" width="46" height="66" rx="6" />
+
+    <!-- road -->
+    <path d="M84 424h344" />
+  </g>
+</svg>

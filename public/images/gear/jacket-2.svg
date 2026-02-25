@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Мото яке (гръб)</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M176 118l-54 52 32 80v160c0 18 14 32 32 32h140c18 0 32-14 32-32V250l32-80-54-52" />
+    <path d="M176 118l80 34 80-34" />
+    <path d="M170 260h172" />
+    <path d="M200 290h112" />
+    <path d="M122 170l-32 46 34 70" />
+    <path d="M390 170l32 46-34 70" />
+  </g>
+</svg>

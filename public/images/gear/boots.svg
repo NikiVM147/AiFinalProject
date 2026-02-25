@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Мото боти</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 124v210c0 26 22 48 48 48h154" />
+    <path d="M382 382c20 0 36 16 36 36s-16 36-36 36H210c-64 0-116-52-116-116v-66" />
+    <path d="M120 216h60" />
+    <path d="M120 256h60" />
+    <path d="M120 296h60" />
+    <path d="M210 454v-72" />
+  </g>
+</svg>

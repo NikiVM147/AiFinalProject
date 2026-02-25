@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <title>Интерком (вариант)</title>
+  <g fill="none" stroke="#ffffff" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M180 214c0-42 34-76 76-76s76 34 76 76v120c0 20-16 36-36 36h-52" />
+    <path d="M180 214v56" />
+    <path d="M140 248h40" />
+    <path d="M332 248h40" />
+    <path d="M244 370v34c0 26-20 46-46 46h-34" />
+    <path d="M214 296h84" />
+  </g>
+</svg>

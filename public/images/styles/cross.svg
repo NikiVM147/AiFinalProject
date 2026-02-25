@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" preserveAspectRatio="xMidYMid meet">
+  <title>Кросова екипировка</title>
+  <g fill="none" stroke="#ffffff" stroke-width="16" stroke-linecap="round" stroke-linejoin="round">
+    <!-- wheels -->
+    <circle cx="140" cy="364" r="60" />
+    <circle cx="372" cy="364" r="60" />
+
+    <!-- frame + suspension -->
+    <path d="M160 300l66-76h62l36 74" />
+    <path d="M226 224l-18-52" />
+    <path d="M208 172h68" />
+    <path d="M276 172l30 44" />
+    <path d="M326 260l56 40" />
+
+    <!-- fork -->
+    <path d="M356 238l-36 126" />
+
+    <!-- handlebar -->
+    <path d="M270 206h70" />
+    <path d="M330 206l18-14" />
+
+    <!-- chain line -->
+    <path d="M220 328h92" />
+
+    <!-- ground / offroad hint -->
+    <path d="M70 420h372" />
+    <path d="M110 420l18-18" />
+    <path d="M170 420l10-10" />
+    <path d="M260 420l16-16" />
+  </g>
+</svg>

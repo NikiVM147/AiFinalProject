@@ -31,26 +31,29 @@ export async function renderLayout({ title, active }) {
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto gap-1">
               <li class="nav-item">
-                <a class="nav-link ${active === 'home' ? 'active' : ''}" href="/">Home</a>
+                <a class="nav-link ${active === 'home' ? 'active' : ''}" href="/">Начало</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link ${active === 'products' ? 'active' : ''}" href="/src/pages/products.html">Products</a>
+                <a class="nav-link ${active === 'styles' ? 'active' : ''}" href="/src/pages/styles.html">Стил</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link ${active === 'cart' ? 'active' : ''}" href="/src/pages/cart.html">Cart</a>
+                <a class="nav-link ${active === 'products' ? 'active' : ''}" href="/src/pages/products.html">Продукти</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link ${active === 'cart' ? 'active' : ''}" href="/src/pages/cart.html">Количка</a>
               </li>
             </ul>
             <ul class="navbar-nav ms-auto gap-1">
               ${isAuthed ? `
               <li class="nav-item">
-                <a class="nav-link ${active === 'account' ? 'active' : ''}" href="/src/pages/account.html">Account</a>
+                <a class="nav-link ${active === 'account' ? 'active' : ''}" href="/src/pages/account.html">Профил</a>
               </li>
               ` : `
               <li class="nav-item">
-                <a class="nav-link ${active === 'login' ? 'active' : ''}" href="/src/pages/login.html">Login</a>
+                <a class="nav-link ${active === 'login' ? 'active' : ''}" href="/src/pages/login.html">Вход</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link btn btn-primary btn-sm px-3 ms-1 ${active === 'register' ? 'active' : ''}" href="/src/pages/register.html">Register</a>
+                <a class="nav-link btn btn-primary btn-sm px-3 ms-1 ${active === 'register' ? 'active' : ''}" href="/src/pages/register.html">Регистрация</a>
               </li>
               `}
             </ul>

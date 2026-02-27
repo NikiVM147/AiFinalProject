@@ -87,7 +87,7 @@ function openProductModal(product) {
           data-price="${product.price_cents}"
           ${product.stock <= 0 ? 'disabled' : ''}
         >
-          Add to cart
+          Добави в количката
         </button>
       </div>
     </div>`;
@@ -121,14 +121,14 @@ function renderProductCard(product) {
   return `
     <div class="col-12 col-sm-6 col-lg-4">
       <div class="card h-100 mg-product-card" data-slug="${product.slug}">
-        <div class="mg-card-img-wrap mg-card-clickable" data-slug="${product.slug}" role="button" tabindex="0" aria-label="Quick view ${product.name}">
+        <div class="mg-card-img-wrap mg-card-clickable" data-slug="${product.slug}" role="button" tabindex="0" aria-label="Подробности ${product.name}">
           ${
             imageUrl
               ? `<img src="${imageUrl}" alt="${product.images?.[0]?.alt ?? product.name}" />`
               : `<div class="mg-img-placeholder"></div>`
           }
           <div class="mg-card-img-overlay">
-            <span class="mg-quickview-hint">Quick view</span>
+            <span class="mg-quickview-hint">Подробности</span>
           </div>
         </div>
         <div class="card-body d-flex flex-column">
@@ -137,9 +137,9 @@ function renderProductCard(product) {
           <div class="mg-price">${formatPrice(product.price_cents, product.currency)}</div>
 
           <div class="mt-auto d-flex gap-2">
-            <button class="btn btn-outline-secondary btn-sm mg-quickview" data-slug="${product.slug}">Quick view</button>
+            <button class="btn btn-outline-secondary btn-sm mg-quickview" data-slug="${product.slug}">Подробности</button>
             <button class="btn btn-primary btn-sm mg-add" data-id="${product.id}" data-price="${product.price_cents}">
-              Add to cart
+              Добави в количката
             </button>
           </div>
         </div>

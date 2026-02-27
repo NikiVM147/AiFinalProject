@@ -6,7 +6,7 @@ import { formatDate, formatPrice } from '@utils/helpers.js';
 import { showToast } from '@utils/toast.js';
 
 export default async function initAccount() {
-  await renderLayout({ title: 'Account — Moto Gear Store', active: 'account' });
+  await renderLayout({ title: 'Профил — Moto Gear Store', active: 'account' });
 
   const session = await getSession();
   if (!session) {
@@ -21,27 +21,27 @@ export default async function initAccount() {
   try {
     const profile = await getMyProfile();
     profileEl.innerHTML = `
-      <div class="mb-1"><span class="text-muted">Email:</span> ${session.user.email}</div>
-      <div class="mb-1"><span class="text-muted">Name:</span> ${profile?.full_name ?? '-'}</div>
-      <div class="mb-1"><span class="text-muted">Phone:</span> ${profile?.phone ?? '-'}</div>
+      <div class="mb-1"><span class="text-muted">Имейл:</span> ${session.user.email}</div>
+      <div class="mb-1"><span class="text-muted">Име:</span> ${profile?.full_name ?? '-'}</div>
+      <div class="mb-1"><span class="text-muted">Телефон:</span> ${profile?.phone ?? '-'}</div>
     `;
   } catch (err) {
-    profileEl.innerHTML = `<div class="text-danger">Failed to load profile.</div>`;
+    profileEl.innerHTML = `<div class="text-danger">Грешка при зареждане на профила.</div>`;
   }
 
   try {
     const orders = await listMyOrders();
     if (!orders.length) {
-      ordersEl.innerHTML = `<div class="text-muted">No orders yet.</div>`;
+      ordersEl.innerHTML = `<div class="text-muted">Все още нямаш поръчки.</div>`;
     } else {
       ordersEl.innerHTML = `
         <div class="table-responsive">
           <table class="table table-sm align-middle">
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Status</th>
-                <th class="text-end">Total</th>
+                <th>Дата</th>
+                <th>Статус</th>
+                <th class="text-end">Сума</th>
               </tr>
             </thead>
             <tbody>
@@ -62,7 +62,7 @@ export default async function initAccount() {
       `;
     }
   } catch (err) {
-    ordersError.textContent = err?.message ?? 'Failed to load orders.';
+    ordersError.textContent = err?.message ?? 'Грешка при зареждане на поръчките.';
     ordersError.classList.remove('d-none');
   }
 
@@ -70,10 +70,10 @@ export default async function initAccount() {
   signOutBtn.addEventListener('click', async () => {
     try {
       await signOut();
-      showToast('Signed out', 'secondary');
+      showToast('Излязохте от акаунта.', 'secondary');
       window.location.href = '/';
     } catch (err) {
-      showToast(err?.message ?? 'Failed to sign out', 'danger');
+      showToast(err?.message ?? 'Грешка при изход.', 'danger');
     }
   });
 }

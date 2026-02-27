@@ -53,7 +53,7 @@ export async function renderLayout({ title, active }) {
               ${isAuthed ? `
               ${isAdmin ? `
               <li class="nav-item">
-                <a class="nav-link ${active === 'admin' ? 'active' : ''}" href="/src/pages/admin.html">Admin</a>
+                <a class="nav-link ${active === 'admin' ? 'active' : ''}" href="/src/pages/admin.html">Администрация</a>
               </li>
               ` : ''}
               <li class="nav-item">
@@ -78,7 +78,7 @@ export async function renderLayout({ title, active }) {
   if (footer) {
     footer.innerHTML = `
       <div class="container text-center">
-        <small>&copy; ${new Date().getFullYear()} Moto Gear Store &mdash; Ride with confidence.</small>
+        <small>&copy; ${new Date().getFullYear()} Moto Gear Store &mdash; Кари с увереност.</small>
       </div>
     `;
   }

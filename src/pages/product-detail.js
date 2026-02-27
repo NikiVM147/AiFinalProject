@@ -10,14 +10,14 @@ function getSlugFromQuery() {
 }
 
 export default async function initProductDetail() {
-  await renderLayout({ title: 'Product — Moto Gear Store', active: 'products' });
+  await renderLayout({ title: 'Продукт — Moto Gear Store', active: 'products' });
 
   const slug = getSlugFromQuery();
   const root = document.getElementById('mg-product');
   const errorEl = document.getElementById('mg-product-error');
 
   if (!slug) {
-    errorEl.textContent = 'Missing product.';
+    errorEl.textContent = 'Липсващ продукт.';
     errorEl.classList.remove('d-none');
     return;
   }
@@ -45,12 +45,12 @@ export default async function initProductDetail() {
           <p class="text-muted mb-4">${product.description ?? ''}</p>
 
           <div class="d-flex align-items-center gap-2 mb-3">
-            <button id="mg-add" class="btn btn-primary px-4">Add to cart</button>
-            <a href="/src/pages/cart.html" class="btn btn-outline-secondary">Go to cart</a>
+            <button id="mg-add" class="btn btn-primary px-4">Добави в количката</button>
+            <a href="/src/pages/cart.html" class="btn btn-outline-secondary">Към количката</a>
           </div>
 
           <span class="badge text-bg-${product.stock > 0 ? 'success' : 'secondary'}">
-            ${product.stock > 0 ? 'In stock' : 'Out of stock'}
+            ${product.stock > 0 ? 'В наличност' : 'Изчерпан'}
           </span>
         </div>
       </div>
@@ -64,13 +64,13 @@ export default async function initProductDetail() {
           quantity: 1,
           unitPriceCents: product.price_cents,
         });
-        showToast('Added to cart', 'success');
+        showToast('Добавено в количката', 'success');
       } catch (err) {
-        showToast(err?.message ?? 'Failed to add to cart', 'danger');
+        showToast(err?.message ?? 'Грешка при добавяне в количката', 'danger');
       }
     });
   } catch (err) {
-    errorEl.textContent = err?.message ?? 'Failed to load product.';
+    errorEl.textContent = err?.message ?? 'Грешка при зареждане на продукта.';
     errorEl.classList.remove('d-none');
   }
 }

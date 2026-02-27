@@ -11,7 +11,7 @@ function total(items) {
 }
 
 export default async function initCheckout() {
-  await renderLayout({ title: 'Checkout — Moto Gear Store', active: 'cart' });
+  await renderLayout({ title: 'Поръчка — Moto Gear Store', active: 'cart' });
 
   const session = await getSession();
   if (!session) {
@@ -27,7 +27,7 @@ export default async function initCheckout() {
   const items = cart.items ?? [];
 
   if (!items.length) {
-    summaryEl.innerHTML = `<div class="alert alert-secondary">Your cart is empty.</div>`;
+    summaryEl.innerHTML = `<div class="alert alert-secondary">Количката ти е празна.</div>`;
     form.classList.add('d-none');
     return;
   }
@@ -39,13 +39,13 @@ export default async function initCheckout() {
     <ul class="list-group mb-3">
       ${items
         .map((it) => {
-          const name = it.product?.name ?? it.product_id ?? 'Item';
+          const name = it.product?.name ?? it.product_id ?? 'Продукт';
           const subtotal = it.unit_price_cents * it.quantity;
           return `
             <li class="list-group-item d-flex justify-content-between">
               <div>
                 <div class="fw-semibold">${name}</div>
-                <div class="small text-muted">Qty: ${it.quantity}</div>
+                <div class="small text-muted">Бр.: ${it.quantity}</div>
               </div>
               <div class="fw-semibold">${formatPrice(subtotal, currency)}</div>
             </li>
@@ -53,7 +53,7 @@ export default async function initCheckout() {
         })
         .join('')}
       <li class="list-group-item d-flex justify-content-between">
-        <div class="fw-semibold">Total</div>
+        <div class="fw-semibold">Общо</div>
         <div class="fw-semibold">${formatPrice(totalCents, currency)}</div>
       </li>
     </ul>
@@ -80,11 +80,11 @@ export default async function initCheckout() {
       });
 
       await clearCart();
-      showToast('Order placed', 'success');
+      showToast('Поръчката е направена успешно!', 'success');
       window.location.href = '/src/pages/account.html';
       return order;
     } catch (err) {
-      const msg = err?.message ?? 'Checkout failed.';
+      const msg = err?.message ?? 'Грешка при поръчката.';
       errorEl.textContent = msg;
       errorEl.classList.remove('d-none');
     }

@@ -165,46 +165,76 @@ export default async function initProducts() {
   }
 
   const filtersEl = document.getElementById('mg-cat-filters');
+  const clearBtn = document.getElementById('mg-clear-filters');
   const grid = document.getElementById('mg-products');
   const empty = document.getElementById('mg-products-empty');
   const errorEl = document.getElementById('mg-products-error');
 
-  let activeCategorySlug = ''; // '' = all
+  /** Set of currently checked category slugs. Empty = show all. */
+  const selectedSlugs = new Set();
 
-  // ── Render pill buttons ──────────────────────────────────────
-  function renderPills(categories) {
-    const allLabel = selectedStyle?.label ? `Всички — ${selectedStyle.label}` : 'Всички';
-    const pills = [{ slug: '', name: allLabel }, ...categories];
-
-    filtersEl.innerHTML = pills
+  // ── Render sidebar checkboxes ────────────────────────────────
+  function renderSidebar(categories) {
+    filtersEl.innerHTML = categories
       .map(
-        (c) =>
-          `<button
-            class="mg-cat-pill ${c.slug === activeCategorySlug ? 'active' : ''}"
+        (c) => `
+        <label class="mg-filter-item" for="mg-chk-${c.slug}">
+          <input
+            class="mg-filter-checkbox"
+            type="checkbox"
+            id="mg-chk-${c.slug}"
             data-slug="${c.slug}"
-            type="button"
-          >${c.name}</button>`
+            ${selectedSlugs.has(c.slug) ? 'checked' : ''}
+          />
+          <span class="mg-filter-label">${c.name}</span>
+        </label>`
       )
       .join('');
 
-    filtersEl.querySelectorAll('.mg-cat-pill').forEach((btn) => {
-      btn.addEventListener('click', () => {
-        activeCategorySlug = btn.dataset.slug;
-        filtersEl.querySelectorAll('.mg-cat-pill').forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
+    filtersEl.querySelectorAll('.mg-filter-checkbox').forEach((chk) => {
+      chk.addEventListener('change', () => {
+        if (chk.checked) {
+          selectedSlugs.add(chk.dataset.slug);
+        } else {
+          selectedSlugs.delete(chk.dataset.slug);
+        }
+        syncClearBtn();
         load();
       });
     });
   }
 
-  // ── Load products ────────────────────────────────────────────
+  function syncClearBtn() {
+    if (selectedSlugs.size > 0) {
+      clearBtn.classList.remove('d-none');
+    } else {
+      clearBtn.classList.add('d-none');
+    }
+  }
+
+  clearBtn.addEventListener('click', () => {
+    selectedSlugs.clear();
+    filtersEl.querySelectorAll('.mg-filter-checkbox').forEach((chk) => {
+      chk.checked = false;
+    });
+    syncClearBtn();
+    load();
+  });
+
+  // ── Load & display products ──────────────────────────────────
   async function load() {
     errorEl.classList.add('d-none');
     empty.classList.add('d-none');
 
     try {
-      const productsRaw = await getProducts({ categorySlug: activeCategorySlug || undefined });
-      const products = filterProductsByStyle(productsRaw, selectedStyleId);
+      // Fetch all products (filter by category client-side for multi-select)
+      const productsRaw = await getProducts();
+      let products = filterProductsByStyle(productsRaw, selectedStyleId);
+
+      // Apply multi-category filter
+      if (selectedSlugs.size > 0) {
+        products = products.filter((p) => selectedSlugs.has(p.category?.slug));
+      }
 
       productMap.clear();
       (products ?? []).forEach((p) => productMap.set(p.slug, p));
@@ -238,26 +268,25 @@ export default async function initProducts() {
         btn.addEventListener('click', async () => {
           try {
             await addToCart({ productId: btn.dataset.id, quantity: 1, unitPriceCents: Number(btn.dataset.price) });
-            showToast('Added to cart', 'success');
+            showToast('Добавено в количката', 'success');
           } catch (err) {
-            showToast(err?.message ?? 'Failed to add to cart', 'danger');
+            showToast(err?.message ?? 'Грешка при добавяне в количката', 'danger');
           }
         });
       });
     } catch (err) {
-      errorEl.textContent = err?.message ?? 'Failed to load products.';
+      errorEl.textContent = err?.message ?? 'Грешка при зареждане на продуктите.';
       errorEl.classList.remove('d-none');
     }
   }
 
-  // ── Load categories → render pills → load products ───────────
+  // ── Load categories → render sidebar → load products ────────
   try {
     const categoriesRaw = await getCategories();
     const categories = filterCategoriesByStyle(categoriesRaw, selectedStyleId);
-    renderPills(categories);
+    renderSidebar(categories);
   } catch {
-    // If categories fail, render only "All" pill
-    renderPills([]);
+    renderSidebar([]);
   }
 
   await load();

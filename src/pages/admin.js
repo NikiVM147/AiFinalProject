@@ -57,7 +57,7 @@ function renderTable() {
       ? `<img src="${getProductImageUrl(p.images[0].path)}" alt="${p.images[0].alt ?? p.name}"
              class="rounded" style="width:56px;height:42px;object-fit:cover;">`
       : `<div class="bg-secondary rounded d-flex align-items-center justify-content-center"
-              style="width:56px;height:42px;font-size:10px;color:#aaa;">No img</div>`;
+              style="width:56px;height:42px;font-size:10px;color:#aaa;">Без снимка</div>`;
 
     const styleLabels = { cross: 'Кросова', road: 'Шосейна', touring: 'Туринг' };
     const styleBadge = p.style
@@ -78,15 +78,15 @@ function renderTable() {
         <td class="text-center">${p.stock}</td>
         <td class="text-center">
           ${p.is_active
-            ? '<span class="badge text-bg-success">Active</span>'
-            : '<span class="badge text-bg-secondary">Hidden</span>'}
+            ? '<span class="badge text-bg-success">Активен</span>'
+            : '<span class="badge text-bg-secondary">Скрит</span>'}
         </td>
         <td class="text-end">
-          <button class="btn btn-sm btn-outline-secondary me-1 btn-edit" data-id="${p.id}" title="Edit">
-            Edit
+          <button class="btn btn-sm btn-outline-secondary me-1 btn-edit" data-id="${p.id}" title="Редактирай">
+            Редактирай
           </button>
-          <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.id}" data-name="${p.name}" title="Delete">
-            Delete
+          <button class="btn btn-sm btn-outline-danger btn-delete" data-id="${p.id}" data-name="${p.name}" title="Изтрий">
+            Изтрий
           </button>
         </td>
       </tr>
@@ -97,7 +97,7 @@ function renderTable() {
 // ── Category options ──────────────────────────────────────────────────────────
 function populateCategorySelect(selectedId = '') {
   const sel = document.getElementById('f-category');
-  sel.innerHTML = '<option value="">Select category…</option>';
+  sel.innerHTML = '<option value="">Избери категория…</option>';
   categories.forEach((c) => {
     const opt = document.createElement('option');
     opt.value = c.id;
@@ -110,7 +110,7 @@ function populateCategorySelect(selectedId = '') {
 // ── Modal: open for CREATE ────────────────────────────────────────────────────
 function openCreateModal() {
   editingProductId = null;
-  document.getElementById('productModalLabel').textContent = 'Add Product';
+  document.getElementById('productModalLabel').textContent = 'Добави продукт';
   document.getElementById('product-form').reset();
   document.getElementById('f-active').checked = true;
   document.getElementById('f-style').value = '';
@@ -128,7 +128,7 @@ function openEditModal(productId) {
   if (!p) return;
 
   editingProductId = productId;
-  document.getElementById('productModalLabel').textContent = 'Edit Product';
+  document.getElementById('productModalLabel').textContent = 'Редактирай продукт';
   formErrorEl().classList.add('d-none');
 
   document.getElementById('f-name').value = p.name;
@@ -160,7 +160,7 @@ function openEditModal(productId) {
           data-img-id="${img.id}"
           data-img-path="${img.path}"
           style="width:20px;height:20px;font-size:10px;line-height:1;"
-          title="Delete image"
+          title="Изтрий снимка"
         >&times;</button>
       </div>
     `).join('');
@@ -191,7 +191,7 @@ async function handleFormSubmit(e) {
   const formErr = formErrorEl();
 
   if (!name || !slug || !categoryId || isNaN(priceEur) || isNaN(stock)) {
-    formErr.textContent = 'Please fill in all required fields.';
+    formErr.textContent = 'Моля, попълни всички задължителни полета.';
     formErr.classList.remove('d-none');
     return;
   }
@@ -221,11 +221,11 @@ async function handleFormSubmit(e) {
 
     if (editingProductId) {
       await adminUpdateProduct(editingProductId, fields);
-      showToast('Product updated.', 'success');
+      showToast('Продуктът е обновен.', 'success');
     } else {
       const created = await adminCreateProduct(fields);
       productId = created.id;
-      showToast('Product created.', 'success');
+      showToast('Продуктът е създаден.', 'success');
     }
 
     // Upload new images
@@ -234,7 +234,7 @@ async function handleFormSubmit(e) {
         try {
           await adminUploadProductImage(productId, files[i], i);
         } catch (imgErr) {
-          showToast(`Image "${files[i].name}" failed to upload: ${imgErr.message}`, 'warning');
+          showToast(`Снимката "${files[i].name}" не може да се качи: ${imgErr.message}`, 'warning');
         }
       }
     }
@@ -242,7 +242,7 @@ async function handleFormSubmit(e) {
     Modal.getOrCreateInstance(document.getElementById('productModal')).hide();
     await refreshProducts();
   } catch (err) {
-    formErr.textContent = err.message ?? 'Something went wrong.';
+    formErr.textContent = err.message ?? 'Нещо се обърка.';
     formErr.classList.remove('d-none');
   } finally {
     saveBtn.disabled = false;
@@ -264,18 +264,18 @@ async function handleConfirmDelete() {
 
   const btn = document.getElementById('btn-confirm-delete');
   btn.disabled = true;
-  btn.textContent = 'Deleting…';
+  btn.textContent = 'Изтриване…';
 
   try {
     await adminDeleteProduct(pendingDeleteId);
     Modal.getOrCreateInstance(document.getElementById('deleteModal')).hide();
-    showToast('Product deleted.', 'success');
+    showToast('Продуктът е изтрит.', 'success');
     await refreshProducts();
   } catch (err) {
-    showToast(err.message ?? 'Delete failed.', 'danger');
+    showToast(err.message ?? 'Грешка при изтриване.', 'danger');
   } finally {
     btn.disabled = false;
-    btn.textContent = 'Delete';
+    btn.textContent = 'Изтрий';
     pendingDeleteId = null;
   }
 }
@@ -294,9 +294,9 @@ async function handleDeleteExistingImage(imageId, imagePath) {
       if (p) p.images = (p.images ?? []).filter((i) => i.id !== imageId);
     }
 
-    showToast('Image deleted.', 'success');
+    showToast('Снимката е изтрита.', 'success');
   } catch (err) {
-    showToast(err.message ?? 'Failed to delete image.', 'danger');
+    showToast(err.message ?? 'Грешка при изтриване на снимка.', 'danger');
   }
 }
 
@@ -307,14 +307,14 @@ async function refreshProducts() {
     renderTable();
   } catch (err) {
     const errEl = errorEl();
-    errEl.textContent = `Failed to load products: ${err.message}`;
+    errEl.textContent = `Грешка при зареждане на продукти: ${err.message}`;
     errEl.classList.remove('d-none');
   }
 }
 
 // ── Main init ─────────────────────────────────────────────────────────────────
 export default async function initAdmin() {
-  await renderLayout({ title: 'Admin — Moto Gear Store', active: 'admin' });
+  await renderLayout({ title: 'Администрация — Moto Gear Store', active: 'admin' });
 
   // Guard: must be authenticated
   const session = await getSession();
@@ -329,13 +329,13 @@ export default async function initAdmin() {
     if (profile?.role !== 'admin') {
       document.querySelector('main').innerHTML = `
         <div class="alert alert-danger mt-4">
-          Access denied. You must be an admin to view this page.
+          Достъпът е отказан. Трябва да си администратор.
         </div>`;
       return;
     }
   } catch {
     document.querySelector('main').innerHTML = `
-      <div class="alert alert-danger mt-4">Failed to verify admin access.</div>`;
+      <div class="alert alert-danger mt-4">Грешка при проверка на достъпа.</div>`;
     return;
   }
 
@@ -343,7 +343,7 @@ export default async function initAdmin() {
   try {
     categories = await adminGetCategories();
   } catch (err) {
-    showToast('Failed to load categories.', 'warning');
+    showToast('Грешка при зареждане на категории.', 'warning');
   }
 
   // Load products
@@ -351,7 +351,7 @@ export default async function initAdmin() {
     products = await adminGetProducts();
   } catch (err) {
     const errEl = errorEl();
-    errEl.textContent = `Failed to load products: ${err.message}`;
+    errEl.textContent = `Грешка при зареждане на продукти: ${err.message}`;
     errEl.classList.remove('d-none');
   } finally {
     loadingEl().classList.add('d-none');

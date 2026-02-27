@@ -11,18 +11,33 @@
 
     <main class="container my-4">
       <div class="mb-4">
-        <h1 class="h3 mb-1" id="mg-page-title">Products</h1>
+        <h1 class="h3 mb-1" id="mg-page-title">Продукти</h1>
         <p class="text-muted mb-0">Разгледайте мото екипировката в нашия магазин.</p>
       </div>
 
-      <!-- Category pill filters -->
-      <div id="mg-cat-filters" class="mg-cat-filter-bar mb-4" role="group" aria-label="Филтър по категория">
-        <!-- Pills populated by JS -->
-      </div>
+      <div class="row g-4 align-items-start">
 
-      <div id="mg-products" class="row g-3"></div>
-      <div id="mg-products-empty" class="alert alert-secondary mt-3 d-none">No products found.</div>
-      <div id="mg-products-error" class="alert alert-danger mt-3 d-none"></div>
+        <!-- ── Left sidebar: category filters ── -->
+        <div class="col-12 col-md-3 col-xl-2">
+          <aside class="mg-sidebar">
+            <div class="mg-sidebar-header">
+              <span class="fw-semibold">Категории</span>
+              <button id="mg-clear-filters" class="btn btn-link btn-sm p-0 d-none">Изчисти</button>
+            </div>
+            <div id="mg-cat-filters" class="mg-sidebar-body">
+              <!-- Checkboxes populated by JS -->
+            </div>
+          </aside>
+        </div>
+
+        <!-- ── Right: product grid ── -->
+        <div class="col-12 col-md-9 col-xl-10">
+          <div id="mg-products" class="row g-3"></div>
+          <div id="mg-products-empty" class="alert alert-secondary mt-3 d-none">Няма намерени продукти.</div>
+          <div id="mg-products-error" class="alert alert-danger mt-3 d-none"></div>
+        </div>
+
+      </div>
     </main>
 
     <!-- Product Quick-View Modal -->

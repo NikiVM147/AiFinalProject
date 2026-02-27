@@ -9,7 +9,7 @@ function showError(el, message) {
 }
 
 export default async function initLogin() {
-  await renderLayout({ title: 'Login — Moto Gear Store', active: 'login' });
+  await renderLayout({ title: 'Вход — Moto Gear Store', active: 'login' });
 
   const session = await getSession();
   if (session) {
@@ -27,16 +27,16 @@ export default async function initLogin() {
     const values = getFormValues(signInForm);
 
     if (!isEmail(values.email)) {
-      showError(signInError, 'Invalid email.');
+      showError(signInError, 'Невалиден имейл.');
       return;
     }
 
     try {
       await signIn(values.email, values.password);
-      showToast('Signed in', 'success');
+      showToast('Влязохте успешно.', 'success');
       window.location.href = '/src/pages/account.html';
     } catch (err) {
-      showError(signInError, err?.message ?? 'Sign in failed.');
+      showError(signInError, err?.message ?? 'Грешка при вход.');
     }
   });
 }

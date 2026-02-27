@@ -8,7 +8,7 @@ function calcTotal(items) {
 }
 
 export default async function initCart() {
-  await renderLayout({ title: 'Cart — Moto Gear Store', active: 'cart' });
+  await renderLayout({ title: 'Количка — Moto Gear Store', active: 'cart' });
 
   const root = document.getElementById('mg-cart');
   const errorEl = document.getElementById('mg-cart-error');
@@ -22,8 +22,8 @@ export default async function initCart() {
 
       if (!items.length) {
         root.innerHTML = `
-          <div class="alert alert-secondary">Your cart is empty.</div>
-          <a class="btn btn-primary" href="/src/pages/products.html">Browse products</a>
+          <div class="alert alert-secondary">Количката ти е празна.</div>
+          <a class="btn btn-primary" href="/src/pages/products.html">Разгледай продукти</a>
         `;
         return;
       }
@@ -36,16 +36,16 @@ export default async function initCart() {
           <table class="table align-middle">
             <thead>
               <tr>
-                <th>Item</th>
-                <th style="width: 120px">Qty</th>
-                <th class="text-end">Price</th>
-                <th class="text-end">Subtotal</th>
+                <th>Продукт</th>
+                <th style="width: 120px">Бр.</th>
+                <th class="text-end">Цена</th>
+                <th class="text-end">Сума</th>
               </tr>
             </thead>
             <tbody>
               ${items
                 .map((it) => {
-                  const name = it.product?.name ?? it.product_id ?? 'Item';
+                  const name = it.product?.name ?? it.product_id ?? 'Продукт';
                   const unit = it.unit_price_cents;
                   const subtotal = unit * it.quantity;
                   return `
@@ -54,7 +54,7 @@ export default async function initCart() {
                         <div class="fw-semibold">${name}</div>
                         ${
                           it.product?.slug
-                            ? `<a class="small text-decoration-none" href="/src/pages/product-detail.html?slug=${encodeURIComponent(it.product.slug)}">View</a>`
+                            ? `<a class="small text-decoration-none" href="/src/pages/product-detail.html?slug=${encodeURIComponent(it.product.slug)}">Преглед</a>`
                             : ''
                         }
                       </td>
@@ -79,10 +79,10 @@ export default async function initCart() {
         </div>
 
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-2">
-          <button id="mg-clear" class="btn btn-outline-danger">Clear cart</button>
+          <button id="mg-clear" class="btn btn-outline-danger">Изчисти количката</button>
           <div class="d-flex align-items-center gap-3">
-            <div class="h5 mb-0">Total: ${formatPrice(totalCents, currency)}</div>
-            <a class="btn btn-primary" href="/src/pages/checkout.html">Checkout</a>
+            <div class="h5 mb-0">Общо: ${formatPrice(totalCents, currency)}</div>
+            <a class="btn btn-primary" href="/src/pages/checkout.html">Поръчай</a>
           </div>
         </div>
       `;
@@ -95,7 +95,7 @@ export default async function initCart() {
             await updateCartItem({ cartItemId, quantity });
             await load();
           } catch (err) {
-            showToast(err?.message ?? 'Failed to update cart', 'danger');
+            showToast(err?.message ?? 'Грешка при обновяване на количката', 'danger');
           }
         });
       });
@@ -104,14 +104,14 @@ export default async function initCart() {
       clearBtn.addEventListener('click', async () => {
         try {
           await clearCart();
-          showToast('Cart cleared', 'secondary');
+          showToast('Количката е изчистена', 'secondary');
           await load();
         } catch (err) {
-          showToast(err?.message ?? 'Failed to clear cart', 'danger');
+          showToast(err?.message ?? 'Грешка при изчистване на количката', 'danger');
         }
       });
     } catch (err) {
-      errorEl.textContent = err?.message ?? 'Failed to load cart.';
+      errorEl.textContent = err?.message ?? 'Грешка при зареждане на количката.';
       errorEl.classList.remove('d-none');
     }
   }

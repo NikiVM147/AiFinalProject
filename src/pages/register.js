@@ -9,7 +9,7 @@ function showError(el, message) {
 }
 
 export default async function initRegister() {
-  await renderLayout({ title: 'Register — Moto Gear Store', active: 'login' });
+  await renderLayout({ title: 'Регистрация — Moto Gear Store', active: 'login' });
 
   const session = await getSession();
   if (session) {
@@ -27,20 +27,20 @@ export default async function initRegister() {
     const values = getFormValues(signUpForm);
 
     if (!isEmail(values.email)) {
-      showError(signUpError, 'Invalid email.');
+      showError(signUpError, 'Невалиден имейл.');
       return;
     }
 
     if (!minLength(values.password, 6)) {
-      showError(signUpError, 'Password must be at least 6 characters.');
+      showError(signUpError, 'Паролата трябва да е поне 6 символа.');
       return;
     }
 
     try {
       await signUp(values.email, values.password, { full_name: values.full_name });
-      showToast('Account created. Check your email if confirmation is enabled.', 'success');
+      showToast('Акаунтът е създаден. Провери имейла си, ако е необходимо потвърждение.', 'success');
     } catch (err) {
-      showError(signUpError, err?.message ?? 'Sign up failed.');
+      showError(signUpError, err?.message ?? 'Грешка при регистрация.');
     }
   });
 }

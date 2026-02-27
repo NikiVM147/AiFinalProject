@@ -31,11 +31,13 @@ export async function getProducts({ categorySlug } = {}) {
       id,
       name,
       slug,
+      brand,
       description,
       price_cents,
       currency,
       stock,
       is_active,
+      style,
       category:categories ( id, name, slug ),
       images:product_images ( path, alt, sort_order )
     `
@@ -64,11 +66,13 @@ export async function getProductBySlug(slug) {
       id,
       name,
       slug,
+      brand,
       description,
       price_cents,
       currency,
       stock,
       is_active,
+      style,
       category:categories ( id, name, slug ),
       images:product_images ( path, alt, sort_order )
     `

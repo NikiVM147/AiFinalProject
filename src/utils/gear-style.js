@@ -57,6 +57,7 @@ export function filterCategoriesByStyle(categories, styleId) {
 export function filterProductsByStyle(products, styleId) {
   const style = getStyleById(styleId);
   if (!style) return products ?? [];
-  const allow = new Set(style.allowedCategorySlugs);
-  return (products ?? []).filter((p) => allow.has(p.category?.slug));
+  // Products with an explicit style: only show in the matching style.
+  // Products with no style set (null/undefined): show in all styles.
+  return (products ?? []).filter((p) => !p.style || p.style === styleId);
 }

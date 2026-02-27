@@ -14,6 +14,7 @@ const byPage = {
   login: () => import('./login.js'),
   register: () => import('./register.js'),
   account: () => import('./account.js'),
+  admin: () => import('./admin.js'),
 };
 
 const byPath = {

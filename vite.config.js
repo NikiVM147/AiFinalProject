@@ -15,6 +15,7 @@ export default defineConfig({
         login: resolve(__dirname, 'src/pages/login.html'),
         register: resolve(__dirname, 'src/pages/register.html'),
         account: resolve(__dirname, 'src/pages/account.html'),
+        admin: resolve(__dirname, 'src/pages/admin.html'),
       },
     },
     outDir: 'dist',

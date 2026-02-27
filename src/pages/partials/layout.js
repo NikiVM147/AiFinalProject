@@ -1,11 +1,17 @@
 import { getSession } from '@services/auth.js';
+import { getMyProfile } from '@services/profiles.js';
 
 export async function renderLayout({ title, active }) {
   document.title = title;
 
   let session = null;
+  let isAdmin = false;
   try {
     session = await getSession();
+    if (session) {
+      const profile = await getMyProfile();
+      isAdmin = profile?.role === 'admin';
+    }
   } catch {
     session = null;
   }
@@ -45,6 +51,11 @@ export async function renderLayout({ title, active }) {
             </ul>
             <ul class="navbar-nav ms-auto gap-1">
               ${isAuthed ? `
+              ${isAdmin ? `
+              <li class="nav-item">
+                <a class="nav-link ${active === 'admin' ? 'active' : ''}" href="/src/pages/admin.html">Admin</a>
+              </li>
+              ` : ''}
               <li class="nav-item">
                 <a class="nav-link ${active === 'account' ? 'active' : ''}" href="/src/pages/account.html">Профил</a>
               </li>

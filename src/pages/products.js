@@ -158,18 +158,52 @@ export default async function initProducts() {
   const selectedStyle = getStyleById(selectedStyleId);
   await renderLayout({ title: 'Products — Moto Gear Store', active: 'products' });
 
-  const select = document.getElementById('category');
+  // Update page title with selected style
+  const titleEl = document.getElementById('mg-page-title');
+  if (titleEl && selectedStyle?.label) {
+    titleEl.textContent = `${selectedStyle.label} екипировка`;
+  }
+
+  const filtersEl = document.getElementById('mg-cat-filters');
   const grid = document.getElementById('mg-products');
   const empty = document.getElementById('mg-products-empty');
   const errorEl = document.getElementById('mg-products-error');
 
+  let activeCategorySlug = ''; // '' = all
+
+  // ── Render pill buttons ──────────────────────────────────────
+  function renderPills(categories) {
+    const allLabel = selectedStyle?.label ? `Всички — ${selectedStyle.label}` : 'Всички';
+    const pills = [{ slug: '', name: allLabel }, ...categories];
+
+    filtersEl.innerHTML = pills
+      .map(
+        (c) =>
+          `<button
+            class="mg-cat-pill ${c.slug === activeCategorySlug ? 'active' : ''}"
+            data-slug="${c.slug}"
+            type="button"
+          >${c.name}</button>`
+      )
+      .join('');
+
+    filtersEl.querySelectorAll('.mg-cat-pill').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        activeCategorySlug = btn.dataset.slug;
+        filtersEl.querySelectorAll('.mg-cat-pill').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        load();
+      });
+    });
+  }
+
+  // ── Load products ────────────────────────────────────────────
   async function load() {
     errorEl.classList.add('d-none');
     empty.classList.add('d-none');
 
     try {
-      const categorySlug = select.value || undefined;
-      const productsRaw = await getProducts({ categorySlug });
+      const productsRaw = await getProducts({ categorySlug: activeCategorySlug || undefined });
       const products = filterProductsByStyle(productsRaw, selectedStyleId);
 
       productMap.clear();
@@ -216,18 +250,15 @@ export default async function initProducts() {
     }
   }
 
+  // ── Load categories → render pills → load products ───────────
   try {
     const categoriesRaw = await getCategories();
     const categories = filterCategoriesByStyle(categoriesRaw, selectedStyleId);
-    const styleSuffix = selectedStyle?.label ? ` — ${selectedStyle.label}` : '';
-    select.innerHTML = `<option value="">All${styleSuffix}</option>${(categories ?? [])
-      .map((c) => `<option value="${c.slug}">${c.name}</option>`)
-      .join('')}`;
+    renderPills(categories);
   } catch {
-    // ignore categories failure; still load products
+    // If categories fail, render only "All" pill
+    renderPills([]);
   }
 
-  select.addEventListener('change', load);
   await load();
 }
-

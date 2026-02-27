@@ -31,14 +31,19 @@ create table if not exists public.products (
   category_id uuid references public.categories(id) on delete set null,
   name text not null,
   slug text not null unique,
+  brand text,
   description text,
   price_cents integer not null check (price_cents >= 0),
   currency text not null default 'EUR',
   stock integer not null default 0 check (stock >= 0),
   is_active boolean not null default true,
+  style text check (style in ('cross', 'road', 'touring')),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+
+-- Migration: add style column if it doesn't exist yet
+alter table public.products add column if not exists style text check (style in ('cross', 'road', 'touring'));
 
 drop trigger if exists products_set_updated_at on public.products;
 create trigger products_set_updated_at
@@ -400,3 +405,9 @@ on storage.objects
 for delete
 to authenticated
 using (bucket_id = 'product-images' and public.is_admin());
+
+-- =========================
+-- Migrations (idempotent)
+-- =========================
+-- Add brand column if upgrading an existing database
+alter table public.products add column if not exists brand text;

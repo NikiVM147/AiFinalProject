@@ -1,412 +1,75 @@
 ﻿-- =====================================================================
--- Moto Gear Store  Seed data (БГ, точни снимки по категория)
+-- Moto Gear Store  PRO Vibe Seed (Dainese, Alpinestars, AGV)
 -- =====================================================================
--- Как да стартирате:
---   Supabase Dashboard  SQL Editor  New query  paste  Run (F5)
--- Скриптът е идемпотентен (ON CONFLICT DO NOTHING).
--- =====================================================================
-
 BEGIN;
 
--- 
--- 1. КАТЕГОРИИ
--- 
+TRUNCATE TABLE public.product_images, public.cart_items, public.order_items
+  RESTART IDENTITY CASCADE;
+DELETE FROM public.products;
+DELETE FROM public.categories;
+
+-- 1. CATEGORIES
 INSERT INTO public.categories (id, name, slug) VALUES
-  ('00000000-0000-0000-0000-000000000001', 'Каски',       'helmets'),
-  ('00000000-0000-0000-0000-000000000002', 'Якета',       'jackets'),
-  ('00000000-0000-0000-0000-000000000003', 'Ръкавици',    'gloves'),
-  ('00000000-0000-0000-0000-000000000004', 'Обувки',      'boots'),
-  ('00000000-0000-0000-0000-000000000005', 'Панталони',   'pants'),
-  ('00000000-0000-0000-0000-000000000006', 'Протектори',  'protectors'),
-  ('00000000-0000-0000-0000-000000000008', 'Аксесоари',   'accessories')
+  ('00000000-0000-0000-0000-000000000001', 'Helmets',    'helmets'),
+  ('00000000-0000-0000-0000-000000000002', 'Jackets',    'jackets'),
+  ('00000000-0000-0000-0000-000000000003', 'Gloves',     'gloves'),
+  ('00000000-0000-0000-0000-000000000004', 'Protectors', 'protectors'),
+  ('00000000-0000-0000-0000-000000000005', 'Pants',      'pants'),
+  ('00000000-0000-0000-0000-000000000006', 'Boots',      'boots'),
+  ('00000000-0000-0000-0000-000000000007', 'Accessories','accessories'),
+  ('00000000-0000-0000-0000-000000000008', 'Parts',      'parts'),
+  ('00000000-0000-0000-0000-000000000009', 'Exhaust',    'exhaust')
 ON CONFLICT (slug) DO NOTHING;
 
--- 
--- 2. ПРОДУКТИ
--- 
-INSERT INTO public.products
-  (id, category_id, name, slug, description, price_cents, currency, stock, is_active)
-VALUES
+-- 2. PRODUCTS
+INSERT INTO public.products (id, category_id, name, slug, brand, description, price_cents, currency, stock, is_active) VALUES
+  ('00000000-0000-0000-0000-000000001000', '00000000-0000-0000-0000-000000000001', 'AGV Pista GP RR Mono Carbon',             'agv-pista-gp-rr-mono-carbon',                 'AGV',          'The highest level of protection on the track. Full carbon fiber construction and MotoGP technology.',                                145000, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001001', '00000000-0000-0000-0000-000000000001', 'AGV K6 S Mono Matt Black',                'agv-k6-s-mono-matt-black',                    'AGV',          'Lightest road helmet in the world. Versatile, safe, and incredibly aerodynamic.',                                                       44900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001002', '00000000-0000-0000-0000-000000000001', 'AGV K3 Solid Matte Black',                'agv-k3-solid-matte-black',                    'AGV',          'Excellent road helmet with sun visor. Safe and comfortable for every rider.',                                                           22900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001003', '00000000-0000-0000-0000-000000000001', 'AGV K1 S Mono Black',                     'agv-k1-s-mono-black',                         'AGV',          'Inspired by racing, built for the street. Entry level helmet with high-performance features.',                                          19900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001004', '00000000-0000-0000-0000-000000000002', 'Alpinestars Missile V2 Ignition Jacket',  'alpinestars-missile-v2-ignition-jacket',      'Alpinestars',  'Premium leather racing jacket with Tech-Air 5 ready protection and superior abrasion resistance.',                                      59995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001005', '00000000-0000-0000-0000-000000000002', 'Alpinestars T-GP R V3 Drystar Jacket',    'alpinestars-tgp-r-v3-drystar-jacket',         'Alpinestars',  'Waterproof textile jacket with sport styling and Alpinestars Drystar membrane.',                                                        36995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001006', '00000000-0000-0000-0000-000000000002', 'Dainese Racing 5 Leather Jacket',         'dainese-racing-5-leather-jacket',             'Dainese',      'Iconic Dainese sport leather jacket with aluminum shoulder plates and S1 fabric.',                                                       56900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001007', '00000000-0000-0000-0000-000000000002', 'Dainese Avro 5 Leather Jacket',           'dainese-avro-5-leather-jacket',               'Dainese',      'High-performance racing jacket with Microelastic 2.0 and Tutu cowhide leather.',                                                       59995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001008', '00000000-0000-0000-0000-000000000003', 'Alpinestars GP Pro R4 Gloves',            'alpinestars-gp-pro-r4-gloves',                'Alpinestars',  'Pure racing gloves with kangaroo leather, carbon knuckles, and DFS protection.',                                                       24999, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001009', '00000000-0000-0000-0000-000000000003', 'Alpinestars SP-8 V3 Leather Gloves',      'alpinestars-sp8-v3-leather-gloves',           'Alpinestars',  'Highly versatile sports riding glove with goatskin leather and EVA padding.',                                                          11499, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001010', '00000000-0000-0000-0000-000000000003', 'Dainese Reacto Carbon Long Gloves',       'dainese-reacto-carbon-long-gloves',           'Dainese',      'Sport gloves with carbon fiber knuckles and reinforced palms for street and track.',                                                    15900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001011', '00000000-0000-0000-0000-000000000003', 'Dainese Impeto D-Dry Gloves',             'dainese-impeto-ddry-gloves',                  'Dainese',      'Waterproof and breathable sport gloves with goatskin construction.',                                                                    13994, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001012', '00000000-0000-0000-0000-000000000005', 'Alpinestars Missile V3 Leather Trousers', 'alpinestars-missile-v3-leather-trousers',     'Alpinestars',  'Premium leather pants with accordion stretch and Alpinestars GP-R protectors.',                                                        46995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001013', '00000000-0000-0000-0000-000000000005', 'Alpinestars Andes v4 Drystar Trousers',   'alpinestars-andes-v4-drystar-trousers',       'Alpinestars',  'Touring pants with waterproof Drystar membrane and removable thermal liner.',                                                          29995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001014', '00000000-0000-0000-0000-000000000005', 'Dainese Delta 4 Leather Pants',           'dainese-delta-4-leather-pants',               'Dainese',      'The classic sport leather trousers with Tutu leather and S1 elasticated inserts.',                                                     47900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001015', '00000000-0000-0000-0000-000000000005', 'Dainese Pony 3 Leather Pants',            'dainese-pony-3-leather-pants',                'Dainese',      'Comfortable and protective everyday leather pants for road use.',                                                                       40449, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001016', '00000000-0000-0000-0000-000000000006', 'Alpinestars Supertech R Vented Boots',    'alpinestars-supertech-r-vented-boots',        'Alpinestars',  'Legendary racing boots used by champions. Maximum protection and ventilation.',                                                         57995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001017', '00000000-0000-0000-0000-000000000006', 'Alpinestars SMX-6 v2 Drystar Boots',      'alpinestars-smx6-v2-drystar-boots',           'Alpinestars',  'Performance street and track boot with waterproof Drystar membrane.',                                                                  31995, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001018', '00000000-0000-0000-0000-000000000006', 'Dainese Torque 4 Out Boots',              'dainese-torque-4-out-boots',                  'Dainese',      'Racing boots with axial distortion control system and high-grip TPU inserts.',                                                         38900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001019', '00000000-0000-0000-0000-000000000006', 'Dainese Axial 2 Air Boots',               'dainese-axial-2-air-boots',                   'Dainese',      'The most advanced motorcycle racing boot with Kevlar carbon D-Axial system.',                                                          69900, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001020', '00000000-0000-0000-0000-000000000004', 'Alpinestars Nucleon KR-R Back Protector', 'alpinestars-nucleon-krr-back-protector',       'Alpinestars',  'Race-spec back protector with high-performance cooling and flexibility.',                                                               12994, 'EUR', 10, true),
+  ('00000000-0000-0000-0000-000000001021', '00000000-0000-0000-0000-000000000004', 'Dainese Pro-Armor Back Protector',        'dainese-proarmor-back-protector',             'Dainese',      'Extremely light and flexible Level 2 back protector with honeycomb structure.',                                                        10995, 'EUR', 10, true);
 
---  КАСКИ 
-  ('10000000-0000-0000-0000-000000000001',
-   '00000000-0000-0000-0000-000000000001',
-   'Arai RX-7V Evo',
-   'arai-rx-7v-evo',
-   'Флагманска пълнолицева каска от Arai с черупка от многосъставна фибра PB-SNC2. Аеродинамичен профил Peripheral Belt, вентилационна система Pinnacle и сертификат SNELL M2020. Изключително лека и тиха  идеална за спортно пистово каране.',
-   89900, 'EUR', 8, true),
-
-  ('10000000-0000-0000-0000-000000000002',
-   '00000000-0000-0000-0000-000000000001',
-   'Shoei NXR2',
-   'shoei-nxr2',
-   'Еволюцията на легендарния NXR с нова аеродинамична форма, AIM+ черупка и вътрешна подплата Marino. Сертифицирана по ECE 22.06. Тихота и прецизност за всекидневно и спортно каране.',
-   74900, 'EUR', 14, true),
-
-  ('10000000-0000-0000-0000-000000000003',
-   '00000000-0000-0000-0000-000000000001',
-   'AGV K6 S',
-   'agv-k6-s',
-   'Ултра-лека спортна каска около 1,2 кг с черупка от карбон и стъклена фибра. Панорамно стъкло с анти-UV покритие, бързо разглобяема вентилация и ECE 22.06 сертификат. Перфектна за ежедневие и мото-туризъм.',
-   59900, 'EUR', 22, true),
-
-  ('10000000-0000-0000-0000-000000000004',
-   '00000000-0000-0000-0000-000000000001',
-   'HJC RPHA 11 Карбон',
-   'hjc-rpha-11-carbon',
-   'Пълнолицева каска с черупка от Premium Integrated Matrix карбон. Разширено зрително поле 95, интегрирано слънчево стъкло, съвместима с Pinlock 120 и готова за Bluetooth гарнитура. Сертификат ECE 22.06 и SNELL M2020.',
-   44900, 'EUR', 18, true),
-
-  ('10000000-0000-0000-0000-000000000005',
-   '00000000-0000-0000-0000-000000000001',
-   'Bell MX-9 Adventure MIPS',
-   'bell-mx9-adventure-mips',
-   'Приключенска каска с MIPS система за ротационна защита. Дълга козирка за офроуд, вентилация Velocity Flow и вградена слънчева леща. Идеална за дуал-спорт и приключенски туризъм.',
-   37900, 'EUR', 20, true),
-
-  ('10000000-0000-0000-0000-000000000006',
-   '00000000-0000-0000-0000-000000000001',
-   'LS2 FF906 Advant',
-   'ls2-ff906-advant',
-   'Иновативна модулна каска с въртящ се към горе модул. Черупка от кинетичен полимер, двойно стъкло  прозрачно и слънчево, интегриран дефлектор за дъжд и вятър. Сертификат ECE 22.06. Отличен избор за туристи.',
-   28900, 'EUR', 30, true),
-
---  ЯКЕТА 
-  ('10000000-0000-0000-0000-000000000007',
-   '00000000-0000-0000-0000-000000000002',
-   'Alpinestars GP Plus R V4',
-   'alpinestars-gp-plus-r-v4',
-   'Премиум кожено яке за спортно каране с CE ниво 2 протектори за рамене и лакти. Перфорирана кожа Nappa за вентилация, еластични панели за подвижност. Включен CE ниво 1 гръбначен протектор. Подходящо за пистови дни.',
-   79900, 'EUR', 10, true),
-
-  ('10000000-0000-0000-0000-000000000008',
-   '00000000-0000-0000-0000-000000000002',
-   'Dainese Super Speed 4',
-   'dainese-super-speed-4',
-   'Спортно кожено яке от теленска кожа с Pro-Shape 2.0 протектори за рамене и лакти CE ниво 2. Прецизна аеродинамична форма, перфорации за охлаждане и подплата Perforated Stretch Jersey. Без компромис с безопасността.',
-   64900, 'EUR', 12, true),
-
-  ('10000000-0000-0000-0000-000000000009',
-   '00000000-0000-0000-0000-000000000002',
-   'Klim Badlands Pro A3',
-   'klim-badlands-pro-a3',
-   'Тежкотоварно приключенско яке с Gore-Tex мембрана и CE ниво 2 протектори навсякъде. Двадесет и три джоба, термолайнер и вентилационни отвори. Върхов избор за ADV туризъм.',
-   119900, 'EUR', 6, true),
-
-  ('10000000-0000-0000-0000-000000000010',
-   '00000000-0000-0000-0000-000000000002',
-   'Rev''It! Quantum 2 Air',
-   'revit-quantum-2-air',
-   'Хибридно яке от перфорирана кожа и текстил Alutex. CE ниво 2 протектори за рамене и лакти, джоб за гръбначен протектор. Лято-ориентиран дизайн с максимален въздушен поток.',
-   49900, 'EUR', 18, true),
-
-  ('10000000-0000-0000-0000-000000000011',
-   '00000000-0000-0000-0000-000000000002',
-   'Icon Hooligan Ironbone',
-   'icon-hooligan-ironbone',
-   'Градско кожено яке в ретро стил с CE ниво 1 протектори. Вградена мрежеста подплата, вътрешен джоб и регулируема талия. Комбинира старинна естетика с модерна мото-безопасност за градско каране.',
-   24900, 'EUR', 28, true),
-
---  РЪКАВИЦИ 
-  ('10000000-0000-0000-0000-000000000012',
-   '00000000-0000-0000-0000-000000000003',
-   'Alpinestars GP Pro R4',
-   'alpinestars-gp-pro-r4',
-   'Пистови кожени ръкавици с карбонови протектори за кокалчетата и дланта. Пришита конструкция за максимален усет на кормилото и вградена перо-подплата. CE ниво 2  KP сертификат.',
-   18900, 'EUR', 35, true),
-
-  ('10000000-0000-0000-0000-000000000013',
-   '00000000-0000-0000-0000-000000000003',
-   'Dainese Carbon 4 Long',
-   'dainese-carbon-4-long',
-   'Дълги кожени ръкавици с карбонови и титаниеви протектори. Отличен усет и прецизно управление за пистово каране. Вградена подплата E.S.A. за амортизация при удар с дълъг маншет.',
-   22900, 'EUR', 25, true),
-
-  ('10000000-0000-0000-0000-000000000014',
-   '00000000-0000-0000-0000-000000000003',
-   'Held Hamada',
-   'held-hamada',
-   'Туристически ръкавици от телешка кожа с Hipora водоустойчива мембрана. Протектори за палеца и дланта, подсилен показалец и Velcro закопчаване. Подходящи за четири сезона и дъждовни дни.',
-   9900, 'EUR', 55, true),
-
-  ('10000000-0000-0000-0000-000000000015',
-   '00000000-0000-0000-0000-000000000003',
-   'Rev''It! Sand 4',
-   'revit-sand-4',
-   'Приключенски ръкавици от текстил Fibex с протектори за кокалчетата и дланта. Сменяеми вложки, регулируема манжета и съвместимост с тъч-скрийн. Дишащи и гъвкави  идеални за дълги ADV пътувания.',
-   12900, 'EUR', 45, true),
-
---  ОБУВКИ 
-  ('10000000-0000-0000-0000-000000000016',
-   '00000000-0000-0000-0000-000000000004',
-   'Alpinestars SMX-6 V2',
-   'alpinestars-smx-6-v2',
-   'Спортно-туристически боти с микро-фибра и TPU корпус. Вградена закалена стоманена плоча в ходилото, CE ниво 2 протектори за глезена и пищяла. Мемори-пяна вложка и дишаща подплата. Сертифицирани по EN 13634:2017.',
-   27900, 'EUR', 20, true),
-
-  ('10000000-0000-0000-0000-000000000017',
-   '00000000-0000-0000-0000-000000000004',
-   'Sidi Mag-1 Air',
-   'sidi-mag-1-air',
-   'Пистови кожени боти с революционен магнитен затвор без традиционни катарами. Вграден вътрешен бот, карбонови пети и CE ниво 2 протектори за глезен и пищял. Максимална защита на пистата.',
-   64900, 'EUR', 8, true),
-
-  ('10000000-0000-0000-0000-000000000018',
-   '00000000-0000-0000-0000-000000000004',
-   'TCX RT-Race Pro Air',
-   'tcx-rt-race-pro-air',
-   'Перфорирани пистови боти с мрежест текстил за максимален въздушен поток. Двойна система за затваряне с Boa Fit и цип, вграден протектор за пищяла и двойна защита на глезена. Сертификат CE ниво 2.',
-   34900, 'EUR', 16, true),
-
-  ('10000000-0000-0000-0000-000000000019',
-   '00000000-0000-0000-0000-000000000004',
-   'Forma Adventure Low',
-   'forma-adventure-low',
-   'Ниски туристически боти с Gore-Tex мембрана  100% водоустойчиви. Подошва Vibram, вграден ортопедичен стелаж и защита на глезена CE ниво 1. Удобни за ходене и каране  отлични за ADV туристи.',
-   18900, 'EUR', 28, true),
-
---  ПАНТАЛОНИ 
-  ('10000000-0000-0000-0000-000000000020',
-   '00000000-0000-0000-0000-000000000005',
-   'Alpinestars GP Plus R V3 Rideknit',
-   'alpinestars-gp-plus-pants',
-   'Спортни кожени панталони с Rideknit перфорирани вставки за охлаждане. CE ниво 2 протектори за коляното и бедрото, включен CE ниво 1 протектор за гърба. Анатомична спортна кройка с 4-точков регулаж.',
-   49900, 'EUR', 14, true),
-
-  ('10000000-0000-0000-0000-000000000021',
-   '00000000-0000-0000-0000-000000000005',
-   'Dainese Delta 4',
-   'dainese-delta-4',
-   'Кожени спортни панталони от теленска кожа с Pro-Shape 2 протектори за коляното и тазобедрената ставка. Регулируема талия и вграден термолайнер за по-студени дни. Класика от Dainese.',
-   39900, 'EUR', 12, true),
-
-  ('10000000-0000-0000-0000-000000000022',
-   '00000000-0000-0000-0000-000000000005',
-   'Rev''It! Tornado 4 H2O',
-   'revit-tornado-4-h2o',
-   'Текстилни туристически панталони с SEEFLEX CE ниво 2 протектори за коляното и тазобедрената ставка. Hydratex H2O вложка за водоустойчивост, термолайнер, вентилационни отвори и дълга цип-връзка с яке.',
-   26900, 'EUR', 22, true),
-
---  ПРОТЕКТОРИ 
-  ('10000000-0000-0000-0000-000000000023',
-   '00000000-0000-0000-0000-000000000006',
-   'Alpinestars Nucleon KR-Ci',
-   'alpinestars-nucleon-kr-ci',
-   'Сертифициран CE ниво 2 гръден протектор с BioArmor материал  лек, дишащ и с памет на формата. Прилепва плътно към тялото и разпределя удара равномерно. Съвместим с повечето мото якета на пазара.',
-   13900, 'EUR', 30, true),
-
-  ('10000000-0000-0000-0000-000000000024',
-   '00000000-0000-0000-0000-000000000006',
-   'Dainese Pro-Armor G2',
-   'dainese-pro-armor-g2',
-   'Гръбначен протектор CE ниво 2 от мулти-клетъчен еластичен материал. Осигурява максимален комфорт и защита. Перфориран дизайн за вентилация, лесно се поставя в стандартния джоб на якето.',
-   8900, 'EUR', 45, true),
-
-  ('10000000-0000-0000-0000-000000000025',
-   '00000000-0000-0000-0000-000000000006',
-   'Knox Aegis',
-   'knox-aegis-back-protector',
-   'CE ниво 2 гръбначен протектор с иновативния Micro-Lock материал  мек докато не е нужна защита, при удар мигновено се втвърдява. Ергономична кройка, дишащ и ултра-лек  само 420 грама.',
-   4900, 'EUR', 60, true),
-
---  АКСЕСОАРИ 
-  ('10000000-0000-0000-0000-000000000028',
-   '00000000-0000-0000-0000-000000000008',
-   'Cardo Packtalk Bold',
-   'cardo-packtalk-bold',
-   'Топ Bluetooth интерком за каска с Dynamic Mesh Communication. Свързва до 15 ездача едновременно в радиус до 1,6 км. Натурален говорим режим, съвместимост с гласов асистент и IP67 защита от вода.',
-   36900, 'EUR', 15, true),
-
-  ('10000000-0000-0000-0000-000000000029',
-   '00000000-0000-0000-0000-000000000008',
-   'Oxford Alarm Chain Lock',
-   'oxford-alarm-chain-lock',
-   'Охранителна верига с вграден 100 dB аларма, активирана при движение. Полтора метра закалена стоманена верига с двоен цилиндричен катинар. Ниво на сигурност Sold Secure Motorcycle Gold. Идеален за мотоциклети и скутери.',
-   5900, 'EUR', 60, true),
-
-  ('10000000-0000-0000-0000-000000000030',
-   '00000000-0000-0000-0000-000000000008',
-   'Interphone SPORT',
-   'interphone-sport',
-   'Компактен Bluetooth интерком за каска с обхват 800 метра. Свързва до 2 устройства едновременно, гласово управление, FM радио и 12 часа автономия. Лесен монтаж на всяка каска без специални инструменти.',
-   18900, 'EUR', 25, true)
-
-ON CONFLICT (slug) DO NOTHING;
-
--- 
--- 3. ИЗОБРАЖЕНИЯ  точни снимки по категория
--- 
+-- 3. IMAGES
+-- NOTE: schema uses (path, alt)  not (url, alt_text)
 INSERT INTO public.product_images (id, product_id, path, alt, sort_order) VALUES
-
---  КАСКИ  снимки на каски 
-
-  -- Arai RX-7V Evo
-  ('20000000-0000-0000-0000-000000000001', '10000000-0000-0000-0000-000000000001',
-    '/images/gear/helmet-1.svg',
-   'Arai RX-7V Evo пълнолицева каска', 0),
-  ('20000000-0000-0000-0000-000000000101', '10000000-0000-0000-0000-000000000001',
-    '/images/gear/helmet-2.svg',
-   'Arai RX-7V Evo  страничен изглед', 1),
-
-  -- Shoei NXR2
-  ('20000000-0000-0000-0000-000000000002', '10000000-0000-0000-0000-000000000002',
-    '/images/gear/helmet-1.svg',
-   'Shoei NXR2 спортна каска', 0),
-
-  -- AGV K6 S
-  ('20000000-0000-0000-0000-000000000003', '10000000-0000-0000-0000-000000000003',
-    '/images/gear/helmet-2.svg',
-   'AGV K6 S лека каска', 0),
-
-  -- HJC RPHA 11 Carbon
-  ('20000000-0000-0000-0000-000000000004', '10000000-0000-0000-0000-000000000004',
-    '/images/gear/helmet-1.svg',
-   'HJC RPHA 11 Carbon каска', 0),
-
-  -- Bell MX-9 Adventure MIPS
-  ('20000000-0000-0000-0000-000000000005', '10000000-0000-0000-0000-000000000005',
-    '/images/gear/helmet-2.svg',
-   'Bell MX-9 Adventure MIPS офроуд каска', 0),
-
-  -- LS2 FF906 Advant
-  ('20000000-0000-0000-0000-000000000006', '10000000-0000-0000-0000-000000000006',
-    '/images/gear/helmet-1.svg',
-   'LS2 FF906 Advant модулна каска', 0),
-
---  ЯКЕТА  снимки на мото якета 
-
-  -- Alpinestars GP Plus R V4
-  ('20000000-0000-0000-0000-000000000007', '10000000-0000-0000-0000-000000000007',
-    '/images/gear/jacket-1.svg',
-   'Alpinestars GP Plus R V4 кожено яке', 0),
-  ('20000000-0000-0000-0000-000000000107', '10000000-0000-0000-0000-000000000007',
-    '/images/gear/jacket-2.svg',
-   'Alpinestars GP Plus R V4  гръб', 1),
-
-  -- Dainese Super Speed 4
-  ('20000000-0000-0000-0000-000000000008', '10000000-0000-0000-0000-000000000008',
-    '/images/gear/jacket-1.svg',
-   'Dainese Super Speed 4 кожено яке', 0),
-
-  -- Klim Badlands Pro A3
-  ('20000000-0000-0000-0000-000000000009', '10000000-0000-0000-0000-000000000009',
-    '/images/gear/jacket-2.svg',
-   'Klim Badlands Pro A3 приключенско яке', 0),
-
-  -- Rev'It! Quantum 2 Air
-  ('20000000-0000-0000-0000-000000000010', '10000000-0000-0000-0000-000000000010',
-    '/images/gear/jacket-1.svg',
-   'Rev''It Quantum 2 Air кожено яке', 0),
-
-  -- Icon Hooligan Ironbone
-  ('20000000-0000-0000-0000-000000000011', '10000000-0000-0000-0000-000000000011',
-    '/images/gear/jacket-2.svg',
-   'Icon Hooligan Ironbone ретро кожено яке', 0),
-
---  РЪКАВИЦИ  снимки на мото ръкавици 
-
-  -- Alpinestars GP Pro R4
-  ('20000000-0000-0000-0000-000000000012', '10000000-0000-0000-0000-000000000012',
-    '/images/gear/gloves.svg',
-   'Alpinestars GP Pro R4 пистови ръкавици', 0),
-
-  -- Dainese Carbon 4 Long
-  ('20000000-0000-0000-0000-000000000013', '10000000-0000-0000-0000-000000000013',
-    '/images/gear/gloves.svg',
-   'Dainese Carbon 4 Long ръкавици', 0),
-
-  -- Held Hamada
-  ('20000000-0000-0000-0000-000000000014', '10000000-0000-0000-0000-000000000014',
-    '/images/gear/gloves.svg',
-   'Held Hamada туристически ръкавици', 0),
-
-  -- Rev'It! Sand 4
-  ('20000000-0000-0000-0000-000000000015', '10000000-0000-0000-0000-000000000015',
-    '/images/gear/gloves.svg',
-   'Rev''It Sand 4 ADV ръкавици', 0),
-
---  ОБУВКИ  снимки на мото боти 
-
-  -- Alpinestars SMX-6 V2
-  ('20000000-0000-0000-0000-000000000016', '10000000-0000-0000-0000-000000000016',
-    '/images/gear/boots.svg',
-   'Alpinestars SMX-6 V2 мото боти', 0),
-
-  -- Sidi Mag-1 Air
-  ('20000000-0000-0000-0000-000000000017', '10000000-0000-0000-0000-000000000017',
-    '/images/gear/boots.svg',
-   'Sidi Mag-1 Air пистови боти', 0),
-
-  -- TCX RT-Race Pro Air
-  ('20000000-0000-0000-0000-000000000018', '10000000-0000-0000-0000-000000000018',
-    '/images/gear/boots.svg',
-   'TCX RT-Race Pro Air перфорирани боти', 0),
-
-  -- Forma Adventure Low
-  ('20000000-0000-0000-0000-000000000019', '10000000-0000-0000-0000-000000000019',
-    '/images/gear/boots.svg',
-   'Forma Adventure Low туристически боти', 0),
-
---  ПАНТАЛОНИ  снимки на мото панталони 
-
-  -- Alpinestars GP Plus R V3 Rideknit
-  ('20000000-0000-0000-0000-000000000020', '10000000-0000-0000-0000-000000000020',
-    '/images/gear/pants.svg',
-   'Alpinestars GP Plus R V3 Rideknit панталони', 0),
-
-  -- Dainese Delta 4
-  ('20000000-0000-0000-0000-000000000021', '10000000-0000-0000-0000-000000000021',
-    '/images/gear/pants.svg',
-   'Dainese Delta 4 кожени панталони', 0),
-
-  -- Rev'It! Tornado 4 H2O
-  ('20000000-0000-0000-0000-000000000022', '10000000-0000-0000-0000-000000000022',
-    '/images/gear/pants.svg',
-   'Rev''It Tornado 4 H2O текстилни панталони', 0),
-
---  ПРОТЕКТОРИ  снимки на протекторна екипировка 
-
-  -- Alpinestars Nucleon KR-Ci
-  ('20000000-0000-0000-0000-000000000023', '10000000-0000-0000-0000-000000000023',
-    '/images/gear/protector.svg',
-   'Alpinestars Nucleon KR-Ci гръден протектор', 0),
-
-  -- Dainese Pro-Armor G2
-  ('20000000-0000-0000-0000-000000000024', '10000000-0000-0000-0000-000000000024',
-    '/images/gear/protector.svg',
-   'Dainese Pro-Armor G2 гръбначен протектор', 0),
-
-  -- Knox Aegis
-  ('20000000-0000-0000-0000-000000000025', '10000000-0000-0000-0000-000000000025',
-    '/images/gear/protector.svg',
-   'Knox Aegis гръбначен протектор', 0),
-
---  АКСЕСОАРИ  снимки на мото аксесоари 
-
-  -- Cardo Packtalk Bold
-  ('20000000-0000-0000-0000-000000000028', '10000000-0000-0000-0000-000000000028',
-    '/images/gear/intercom-1.svg',
-   'Cardo Packtalk Bold Bluetooth интерком', 0),
-  ('20000000-0000-0000-0000-000000000128', '10000000-0000-0000-0000-000000000028',
-    '/images/gear/intercom-2.svg',
-   'Cardo Packtalk Bold монтиран на каска', 1),
-
-  -- Oxford Alarm Chain Lock
-  ('20000000-0000-0000-0000-000000000029', '10000000-0000-0000-0000-000000000029',
-    '/images/gear/chain-lock.svg',
-   'Oxford Alarm Chain Lock охранителна верига', 0),
-
-  -- Interphone SPORT
-  ('20000000-0000-0000-0000-000000000030', '10000000-0000-0000-0000-000000000030',
-    '/images/gear/intercom-2.svg',
-   'Interphone SPORT Bluetooth интерком', 0)
-
-ON CONFLICT (id) DO NOTHING;
+  ('a0000000-0000-0000-0000-000000001000', '00000000-0000-0000-0000-000000001000', 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800', 'AGV Pista GP RR Mono Carbon', 0),
+  ('a0000000-0000-0000-0000-000000001001', '00000000-0000-0000-0000-000000001001', 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800', 'AGV K6 S Mono Matt Black', 0),
+  ('a0000000-0000-0000-0000-000000001002', '00000000-0000-0000-0000-000000001002', 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800', 'AGV K3 Solid Matte Black', 0),
+  ('a0000000-0000-0000-0000-000000001003', '00000000-0000-0000-0000-000000001003', 'https://images.unsplash.com/photo-1599819811279-d5ad9cccf838?auto=format&fit=crop&q=80&w=800', 'AGV K1 S Mono Black', 0),
+  ('a0000000-0000-0000-0000-000000001004', '00000000-0000-0000-0000-000000001004', 'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=800', 'Alpinestars Missile V2 Ignition Jacket', 0),
+  ('a0000000-0000-0000-0000-000000001005', '00000000-0000-0000-0000-000000001005', 'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=800', 'Alpinestars T-GP R V3 Drystar Jacket', 0),
+  ('a0000000-0000-0000-0000-000000001006', '00000000-0000-0000-0000-000000001006', 'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=800', 'Dainese Racing 5 Leather Jacket', 0),
+  ('a0000000-0000-0000-0000-000000001007', '00000000-0000-0000-0000-000000001007', 'https://images.unsplash.com/photo-1591637333184-19aa84b3e01f?auto=format&fit=crop&q=80&w=800', 'Dainese Avro 5 Leather Jacket', 0),
+  ('a0000000-0000-0000-0000-000000001008', '00000000-0000-0000-0000-000000001008', 'https://images.unsplash.com/photo-1614165933026-0750fcd503e8?auto=format&fit=crop&q=80&w=800', 'Alpinestars GP Pro R4 Gloves', 0),
+  ('a0000000-0000-0000-0000-000000001009', '00000000-0000-0000-0000-000000001009', 'https://images.unsplash.com/photo-1614165933026-0750fcd503e8?auto=format&fit=crop&q=80&w=800', 'Alpinestars SP-8 V3 Leather Gloves', 0),
+  ('a0000000-0000-0000-0000-000000001010', '00000000-0000-0000-0000-000000001010', 'https://images.unsplash.com/photo-1614165933026-0750fcd503e8?auto=format&fit=crop&q=80&w=800', 'Dainese Reacto Carbon Long Gloves', 0),
+  ('a0000000-0000-0000-0000-000000001011', '00000000-0000-0000-0000-000000001011', 'https://images.unsplash.com/photo-1614165933026-0750fcd503e8?auto=format&fit=crop&q=80&w=800', 'Dainese Impeto D-Dry Gloves', 0),
+  ('a0000000-0000-0000-0000-000000001012', '00000000-0000-0000-0000-000000001012', 'https://images.unsplash.com/photo-1558389186-438424b00a32?auto=format&fit=crop&q=80&w=800', 'Alpinestars Missile V3 Leather Trousers', 0),
+  ('a0000000-0000-0000-0000-000000001013', '00000000-0000-0000-0000-000000001013', 'https://images.unsplash.com/photo-1558389186-438424b00a32?auto=format&fit=crop&q=80&w=800', 'Alpinestars Andes v4 Drystar Trousers', 0),
+  ('a0000000-0000-0000-0000-000000001014', '00000000-0000-0000-0000-000000001014', 'https://images.unsplash.com/photo-1558389186-438424b00a32?auto=format&fit=crop&q=80&w=800', 'Dainese Delta 4 Leather Pants', 0),
+  ('a0000000-0000-0000-0000-000000001015', '00000000-0000-0000-0000-000000001015', 'https://images.unsplash.com/photo-1558389186-438424b00a32?auto=format&fit=crop&q=80&w=800', 'Dainese Pony 3 Leather Pants', 0),
+  ('a0000000-0000-0000-0000-000000001016', '00000000-0000-0000-0000-000000001016', 'https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=800', 'Alpinestars Supertech R Vented Boots', 0),
+  ('a0000000-0000-0000-0000-000000001017', '00000000-0000-0000-0000-000000001017', 'https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=800', 'Alpinestars SMX-6 v2 Drystar Boots', 0),
+  ('a0000000-0000-0000-0000-000000001018', '00000000-0000-0000-0000-000000001018', 'https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=800', 'Dainese Torque 4 Out Boots', 0),
+  ('a0000000-0000-0000-0000-000000001019', '00000000-0000-0000-0000-000000001019', 'https://images.unsplash.com/photo-1605152276897-4f618f831968?auto=format&fit=crop&q=80&w=800', 'Dainese Axial 2 Air Boots', 0),
+  ('a0000000-0000-0000-0000-000000001020', '00000000-0000-0000-0000-000000001020', 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800', 'Alpinestars Nucleon KR-R Back Protector', 0),
+  ('a0000000-0000-0000-0000-000000001021', '00000000-0000-0000-0000-000000001021', 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?auto=format&fit=crop&q=80&w=800', 'Dainese Pro-Armor Back Protector', 0);
 
 COMMIT;
-
--- Проверка (изпълнете отделно след seed-а):
--- SELECT c.name AS категория, COUNT(p.id) AS продукти
--- FROM public.categories c
--- LEFT JOIN public.products p ON p.category_id = c.id
--- GROUP BY c.name ORDER BY c.name;

@@ -320,7 +320,7 @@ a { transition: color .15s; }
 /* ── Hero (home page) ───────────────────────────────────────── */
 .mg-hero {
   background: linear-gradient(135deg, #08080f 0%, #161626 40%, #1e1228 75%, #0e0810 100%);
-  padding: 7rem 1.5rem;
+  padding: 4.5rem 1.5rem 3rem;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -341,6 +341,45 @@ a { transition: color .15s; }
   bottom: 0; left: 0; right: 0;
   height: 1px;
   background: linear-gradient(90deg, transparent, rgba(var(--mg-red-rgb), .3), transparent);
+}
+
+/* ── Hero track image ───────────────────────────────────────── */
+.mg-hero-track {
+  position: relative;
+  width: 100%;
+  line-height: 0;
+  overflow: hidden;
+}
+.mg-hero-track img {
+  display: block;
+  width: 100%;
+  height: 420px;
+  object-fit: cover;
+  object-position: center bottom;
+}
+.mg-hero-track::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 12%;
+  background: linear-gradient(to bottom,
+    rgba(14, 8, 16, .6) 0%,
+    transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.mg-hero-track::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 4%;
+  background: linear-gradient(to top, var(--mg-bg) 0%, transparent 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+@media (max-width: 767.98px) {
+  .mg-hero-track img { height: 200px; }
 }
 .mg-hero h1 {
   position: relative;

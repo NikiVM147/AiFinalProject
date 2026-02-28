@@ -22,7 +22,7 @@ export async function renderLayout({ title, active }) {
     nav.innerHTML = `
       <nav class="navbar navbar-expand-lg mg-navbar">
         <div class="container">
-          <a class="navbar-brand" href="/">⚡ Moto Gear</a>
+          <a class="navbar-brand" href="/">NVMoto Gear</a>
           <button
             class="navbar-toggler"
             type="button"

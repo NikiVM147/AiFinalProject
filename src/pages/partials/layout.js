@@ -45,11 +45,8 @@ export async function renderLayout({ title, active }) {
               <li class="nav-item">
                 <a class="nav-link ${active === 'products' ? 'active' : ''}" href="/src/pages/products.html">Продукти</a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link ${active === 'cart' ? 'active' : ''}" href="/src/pages/cart.html">Количка</a>
-              </li>
             </ul>
-            <ul class="navbar-nav ms-auto gap-1">
+            <ul class="navbar-nav ms-auto align-items-center gap-1">
               ${isAuthed ? `
               ${isAdmin ? `
               <li class="nav-item">
@@ -67,6 +64,15 @@ export async function renderLayout({ title, active }) {
                 <a class="nav-link btn btn-primary btn-sm px-3 ms-1 ${active === 'register' ? 'active' : ''}" href="/src/pages/register.html">Регистрация</a>
               </li>
               `}
+              <li class="nav-item">
+                <a class="mg-cart-btn ${active === 'cart' ? 'active' : ''}" href="/src/pages/cart.html" aria-label="Количка" title="Количка">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                  </svg>
+                  <span class="mg-cart-badge" id="mg-nav-cart-count" style="display:none">0</span>
+                </a>
+              </li>
             </ul>
           </div>
         </div>
@@ -82,4 +88,17 @@ export async function renderLayout({ title, active }) {
       </div>
     `;
   }
+
+  // ── Update cart badge ────────────────────────────────────────
+  try {
+    const LS_KEY = 'mg_cart_v1';
+    const raw = localStorage.getItem(LS_KEY);
+    const cart = raw ? JSON.parse(raw) : { items: [] };
+    const total = (cart.items ?? []).reduce((sum, i) => sum + (i.quantity ?? 1), 0);
+    const badge = document.getElementById('mg-nav-cart-count');
+    if (badge && total > 0) {
+      badge.textContent = total > 99 ? '99+' : total;
+      badge.style.display = '';
+    }
+  } catch { /* ignore */ }
 }

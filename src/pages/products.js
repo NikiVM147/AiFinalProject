@@ -165,6 +165,7 @@ export default async function initProducts() {
   }
 
   const filtersEl = document.getElementById('mg-cat-filters');
+  const brandFiltersEl = document.getElementById('mg-brand-filters');
   const clearBtn = document.getElementById('mg-clear-filters');
   const grid = document.getElementById('mg-products');
   const empty = document.getElementById('mg-products-empty');
@@ -172,6 +173,9 @@ export default async function initProducts() {
 
   /** Set of currently checked category slugs. Empty = show all. */
   const selectedSlugs = new Set();
+
+  /** Set of currently checked brand names. Empty = show all. */
+  const selectedBrands = new Set();
 
   // ── Render sidebar checkboxes ────────────────────────────────
   function renderSidebar(categories) {
@@ -205,16 +209,51 @@ export default async function initProducts() {
   }
 
   function syncClearBtn() {
-    if (selectedSlugs.size > 0) {
+    if (selectedSlugs.size > 0 || selectedBrands.size > 0) {
       clearBtn.classList.remove('d-none');
     } else {
       clearBtn.classList.add('d-none');
     }
   }
 
+  // ── Render brand checkboxes ──────────────────────────────────
+  function renderBrandSidebar(brands) {
+    brandFiltersEl.innerHTML = brands
+      .map(
+        (brand) => `
+        <label class="mg-filter-item" for="mg-chk-brand-${brand}">
+          <input
+            class="mg-brand-checkbox"
+            type="checkbox"
+            id="mg-chk-brand-${brand}"
+            data-brand="${brand}"
+            ${selectedBrands.has(brand) ? 'checked' : ''}
+          />
+          <span class="mg-filter-label">${brand}</span>
+        </label>`
+      )
+      .join('');
+
+    brandFiltersEl.querySelectorAll('.mg-brand-checkbox').forEach((chk) => {
+      chk.addEventListener('change', () => {
+        if (chk.checked) {
+          selectedBrands.add(chk.dataset.brand);
+        } else {
+          selectedBrands.delete(chk.dataset.brand);
+        }
+        syncClearBtn();
+        load();
+      });
+    });
+  }
+
   clearBtn.addEventListener('click', () => {
     selectedSlugs.clear();
+    selectedBrands.clear();
     filtersEl.querySelectorAll('.mg-filter-checkbox').forEach((chk) => {
+      chk.checked = false;
+    });
+    brandFiltersEl.querySelectorAll('.mg-brand-checkbox').forEach((chk) => {
       chk.checked = false;
     });
     syncClearBtn();
@@ -235,6 +274,16 @@ export default async function initProducts() {
       if (selectedSlugs.size > 0) {
         products = products.filter((p) => selectedSlugs.has(p.category?.slug));
       }
+
+      // Apply brand filter
+      if (selectedBrands.size > 0) {
+        products = products.filter((p) => p.brand && selectedBrands.has(p.brand));
+      }
+
+      // Extract & render unique brands from style-filtered products (before brand filter)
+      const allStyleProducts = filterProductsByStyle(productsRaw, selectedStyleId);
+      const brands = [...new Set(allStyleProducts.map((p) => p.brand).filter(Boolean))].sort();
+      renderBrandSidebar(brands);
 
       productMap.clear();
       (products ?? []).forEach((p) => productMap.set(p.slug, p));

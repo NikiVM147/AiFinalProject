@@ -12,7 +12,7 @@
     <main class="container my-4">
 
       <!-- Header row -->
-      <div class="d-flex justify-content-between align-items-center mb-4">
+      <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h1 class="h3 mb-1">Администрация</h1>
           <p class="text-muted mb-0">Управление на продукти и наличности.</p>
@@ -22,31 +22,87 @@
         </button>
       </div>
 
-      <!-- Products table -->
-      <div class="card">
-        <div class="card-body p-0">
-          <div id="admin-loading" class="text-center py-5 text-muted">Зареждане на продукти…</div>
-          <div class="table-responsive d-none" id="admin-table-wrap">
-            <table class="table table-hover align-middle mb-0">
-              <thead>
-                <tr>
-                  <th style="width:70px">Снимка</th>
-                  <th>Наименование</th>
-                  <th>Марка</th>
-                  <th>Категория</th>
-                  <th>Стил</th>
-                  <th class="text-end">Цена</th>
-                  <th class="text-center">Наличност</th>
-                  <th class="text-center">Активен</th>
-                  <th class="text-end">Действия</th>
-                </tr>
-              </thead>
-              <tbody id="admin-product-list"></tbody>
-            </table>
+      <!-- Tabs -->
+      <ul class="nav nav-tabs mb-3" id="admin-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="tab-products-btn" data-bs-toggle="tab" data-bs-target="#tab-products" type="button" role="tab">Продукти</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-cats-btn" data-bs-toggle="tab" data-bs-target="#tab-cats" type="button" role="tab">Категории</button>
+        </li>
+      </ul>
+
+      <div class="tab-content">
+
+        <!-- ── Products tab ── -->
+        <div class="tab-pane fade show active" id="tab-products" role="tabpanel">
+          <!-- Search bar -->
+          <div class="input-group mb-3">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+            <input
+              type="search"
+              class="form-control"
+              id="admin-search"
+              placeholder="Търси по име, марка, категория, стил…"
+              autocomplete="off"
+            />
+            <button class="btn btn-outline-secondary d-none" id="admin-search-clear" type="button">✕</button>
           </div>
-          <div id="admin-empty" class="text-center py-5 text-muted d-none">Няма намерени продукти.</div>
-          <div id="admin-error" class="alert alert-danger m-3 d-none"></div>
+          <div class="card">
+            <div class="card-body p-0">
+              <div id="admin-loading" class="text-center py-5 text-muted">Зареждане на продукти…</div>
+              <div class="table-responsive d-none" id="admin-table-wrap">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th style="width:70px">Снимка</th>
+                      <th>Наименование</th>
+                      <th>Марка</th>
+                      <th>Категория</th>
+                      <th>Стил</th>
+                      <th class="text-end">Цена</th>
+                      <th class="text-center">Наличност</th>
+                      <th class="text-center">Активен</th>
+                      <th class="text-end">Действия</th>
+                    </tr>
+                  </thead>
+                  <tbody id="admin-product-list"></tbody>
+                </table>
+              </div>
+              <div id="admin-empty" class="text-center py-5 text-muted d-none">Няма намерени продукти.</div>
+              <div id="admin-error" class="alert alert-danger m-3 d-none"></div>
+            </div>
+          </div>
         </div>
+
+        <!-- ── Categories tab ── -->
+        <div class="tab-pane fade" id="tab-cats" role="tabpanel">
+          <div class="card">
+            <div class="card-body">
+              <!-- Add category form -->
+              <form id="cat-add-form" class="row g-2 align-items-end mb-4" novalidate>
+                <div class="col-12 col-sm-5">
+                  <label class="form-label small" for="cat-name">Наименование <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" id="cat-name" placeholder="Каски" required />
+                </div>
+                <div class="col-12 col-sm-5">
+                  <label class="form-label small" for="cat-slug">Slug <span class="text-danger">*</span></label>
+                  <input type="text" class="form-control form-control-sm" id="cat-slug" placeholder="helmets" required />
+                </div>
+                <div class="col-12 col-sm-2">
+                  <button type="submit" class="btn btn-primary btn-sm w-100">Добави</button>
+                </div>
+                <div id="cat-form-error" class="col-12 text-danger small d-none"></div>
+              </form>
+
+              <!-- Categories list -->
+              <div id="cat-loading" class="text-muted small">Зареждане…</div>
+              <ul id="cat-list" class="list-group list-group-flush d-none"></ul>
+              <div id="cat-empty" class="text-muted small d-none">Няма категории.</div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </main>
 

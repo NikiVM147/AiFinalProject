@@ -12,6 +12,8 @@ import {
   adminUploadProductImage,
   adminDeleteProductImage,
   adminUpdateImageSortOrders,
+  adminCreateCategory,
+  adminDeleteCategory,
 } from '@services/admin.js';
 import { formatPrice } from '@utils/helpers.js';
 import { showToast } from '@utils/toast.js';
@@ -40,11 +42,13 @@ function toSlug(str) {
 }
 
 // ── Table rendering ───────────────────────────────────────────────────────────
-function renderTable() {
-  const list = productListEl();
-  if (!list) return;
+function renderTable(list) {
+  const el = productListEl();
+  if (!el) return;
 
-  if (!products.length) {
+  const rows = list ?? products;
+
+  if (!rows.length) {
     tableWrapEl().classList.add('d-none');
     emptyEl().classList.remove('d-none');
     return;
@@ -53,7 +57,7 @@ function renderTable() {
   emptyEl().classList.add('d-none');
   tableWrapEl().classList.remove('d-none');
 
-  list.innerHTML = products.map((p) => {
+  el.innerHTML = rows.map((p) => {
     const thumb = p.images?.[0]?.path
       ? `<img src="${getProductImageUrl(p.images[0].path)}" alt="${p.images[0].alt ?? p.name}"
              class="rounded" style="width:56px;height:42px;object-fit:cover;">`
@@ -93,6 +97,23 @@ function renderTable() {
       </tr>
     `;
   }).join('');
+}
+
+// ── Live search filter ────────────────────────────────────────────────────────
+let adminSearchQuery = '';
+
+function applySearch() {
+  const q = adminSearchQuery.trim().toLowerCase();
+  if (!q) { renderTable(products); return; }
+  const styleLabels = { cross: 'кросова', road: 'шосейна', touring: 'туринг' };
+  const filtered = products.filter((p) => [
+    p.name,
+    p.slug,
+    p.brand,
+    p.category?.name,
+    p.style ? styleLabels[p.style] : '',
+  ].some((v) => v && v.toLowerCase().includes(q)));
+  renderTable(filtered);
 }
 
 // ── Category options ──────────────────────────────────────────────────────────
@@ -318,7 +339,7 @@ async function handleDeleteExistingImage(imageId, imagePath) {
 async function refreshProducts() {
   try {
     products = await adminGetProducts();
-    renderTable();
+    applySearch();
   } catch (err) {
     const errEl = errorEl();
     errEl.textContent = `Грешка при зареждане на продукти: ${err.message}`;
@@ -371,12 +392,37 @@ export default async function initAdmin() {
     loadingEl().classList.add('d-none');
   }
 
-  renderTable();
+  applySearch();
 
   // ── Event delegation ──────────────────────────────────────────────────────
 
   // "Add Product" button
   document.getElementById('btn-add-product').addEventListener('click', openCreateModal);
+
+  // ── Live search ───────────────────────────────────────────────────────────
+  const searchInput = document.getElementById('admin-search');
+  const searchClear = document.getElementById('admin-search-clear');
+
+  searchInput.addEventListener('input', () => {
+    adminSearchQuery = searchInput.value;
+    searchClear.classList.toggle('d-none', !adminSearchQuery);
+    applySearch();
+  });
+  searchClear.addEventListener('click', () => {
+    searchInput.value = '';
+    adminSearchQuery = '';
+    searchClear.classList.add('d-none');
+    applySearch();
+    searchInput.focus();
+  });
+
+  // Hide/show "Add Product" button with tab switch
+  document.getElementById('tab-cats-btn').addEventListener('shown.bs.tab', () => {
+    document.getElementById('btn-add-product').classList.add('d-none');
+  });
+  document.getElementById('tab-products-btn').addEventListener('shown.bs.tab', () => {
+    document.getElementById('btn-add-product').classList.remove('d-none');
+  });
 
   // Table: edit / delete buttons
   document.getElementById('admin-product-list').addEventListener('click', (e) => {
@@ -469,4 +515,104 @@ export default async function initAdmin() {
   document.getElementById('productModal').addEventListener('show.bs.modal', () => {
     delete slugInput.dataset.edited;
   });
+
+  // ── Categories management ─────────────────────────────────────────────────
+
+  const catListEl   = document.getElementById('cat-list');
+  const catLoadEl   = document.getElementById('cat-loading');
+  const catEmptyEl  = document.getElementById('cat-empty');
+  const catFormErr  = document.getElementById('cat-form-error');
+  const catNameIn   = document.getElementById('cat-name');
+  const catSlugIn   = document.getElementById('cat-slug');
+
+  // Auto-generate slug for category name
+  catNameIn.addEventListener('input', () => {
+    if (!catSlugIn.dataset.edited) catSlugIn.value = toSlug(catNameIn.value);
+  });
+  catSlugIn.addEventListener('input', () => { catSlugIn.dataset.edited = '1'; });
+
+  async function loadCategories() {
+    catLoadEl.classList.remove('d-none');
+    catListEl.classList.add('d-none');
+    catEmptyEl.classList.add('d-none');
+    try {
+      categories = await adminGetCategories();
+      renderCategoryList();
+    } catch (err) {
+      showToast(err.message ?? 'Грешка при зареждане на категории.', 'danger');
+    } finally {
+      catLoadEl.classList.add('d-none');
+    }
+  }
+
+  function renderCategoryList() {
+    if (!categories.length) {
+      catEmptyEl.classList.remove('d-none');
+      catListEl.classList.add('d-none');
+      return;
+    }
+    catEmptyEl.classList.add('d-none');
+    catListEl.classList.remove('d-none');
+    catListEl.innerHTML = categories.map((c) => `
+      <li class="list-group-item d-flex justify-content-between align-items-center px-0">
+        <div>
+          <span class="fw-semibold">${c.name}</span>
+          <span class="text-muted small ms-2">${c.slug}</span>
+        </div>
+        <button
+          class="btn btn-outline-danger btn-sm btn-del-cat"
+          data-id="${c.id}"
+          data-name="${c.name}"
+          title="Изтрий категория"
+        >&times; Изтрий</button>
+      </li>`).join('');
+  }
+
+  catListEl.addEventListener('click', async (e) => {
+    const btn = e.target.closest('.btn-del-cat');
+    if (!btn) return;
+    if (!confirm(`Изтриване на категория „${btn.dataset.name}"?\nПродуктите в нея ще останат без категория.`)) return;
+    btn.disabled = true;
+    try {
+      await adminDeleteCategory(btn.dataset.id);
+      showToast('Категорията е изтрита.', 'success');
+      await loadCategories();
+      populateCategorySelect(); // refresh product-form select
+    } catch (err) {
+      showToast(err.message ?? 'Грешка при изтриване.', 'danger');
+      btn.disabled = false;
+    }
+  });
+
+  document.getElementById('cat-add-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = catNameIn.value.trim();
+    const slug = catSlugIn.value.trim();
+    catFormErr.classList.add('d-none');
+
+    if (!name || !slug) {
+      catFormErr.textContent = 'Попълни наименование и slug.';
+      catFormErr.classList.remove('d-none');
+      return;
+    }
+
+    const submitBtn = e.target.querySelector('[type=submit]');
+    submitBtn.disabled = true;
+    try {
+      await adminCreateCategory(name, slug);
+      showToast('Категорията е добавена.', 'success');
+      catNameIn.value = '';
+      catSlugIn.value = '';
+      delete catSlugIn.dataset.edited;
+      await loadCategories();
+      populateCategorySelect();
+    } catch (err) {
+      catFormErr.textContent = err.message ?? 'Грешка при добавяне.';
+      catFormErr.classList.remove('d-none');
+    } finally {
+      submitBtn.disabled = false;
+    }
+  });
+
+  await loadCategories();
 }

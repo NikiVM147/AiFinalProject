@@ -122,3 +122,23 @@ export async function adminGetCategories() {
   if (error) throw error;
   return data ?? [];
 }
+
+export async function adminCreateCategory(name, slug) {
+  const { data, error } = await supabase
+    .from('categories')
+    .insert([{ name, slug }])
+    .select('id, name, slug')
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
+export async function adminDeleteCategory(id) {
+  const { error } = await supabase
+    .from('categories')
+    .delete()
+    .eq('id', id);
+
+  if (error) throw error;
+}

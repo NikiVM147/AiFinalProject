@@ -40,10 +40,7 @@ export async function renderLayout({ title, active }) {
                 <a class="nav-link ${active === 'home' ? 'active' : ''}" href="/">Начало</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link ${active === 'styles' ? 'active' : ''}" href="/src/pages/styles.html">Стил</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link ${active === 'products' ? 'active' : ''}" href="/src/pages/products.html">Продукти</a>
+                <a class="nav-link ${active === 'products' ? 'active' : ''}" href="/src/pages/styles.html" id="mg-nav-products">Продукти</a>
               </li>
             </ul>
             <ul class="navbar-nav ms-auto align-items-center gap-1">

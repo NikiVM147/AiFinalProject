@@ -5,10 +5,12 @@ import { addToCart } from '@services/cart.js';
 import { formatPrice } from '@utils/helpers.js';
 import { showToast } from '@utils/toast.js';
 import {
+  STYLES,
   filterCategoriesByStyle,
   filterProductsByStyle,
   getSelectedStyle,
   getStyleById,
+  setSelectedStyle,
 } from '@utils/gear-style.js';
 
 /** Map of slug → product, filled after each load() */
@@ -149,13 +151,13 @@ function renderProductCard(product) {
 }
 
 export default async function initProducts() {
-  const selectedStyleId = getSelectedStyle();
+  let selectedStyleId = getSelectedStyle();
   if (!selectedStyleId) {
     window.location.href = '/src/pages/styles.html';
     return;
   }
 
-  const selectedStyle = getStyleById(selectedStyleId);
+  let selectedStyle = getStyleById(selectedStyleId);
   await renderLayout({ title: 'Products — Moto Gear Store', active: 'products' });
 
   // Update page title with selected style
@@ -166,6 +168,7 @@ export default async function initProducts() {
 
   const filtersEl = document.getElementById('mg-cat-filters');
   const brandFiltersEl = document.getElementById('mg-brand-filters');
+  const styleFiltersEl = document.getElementById('mg-style-filters');
   const clearBtn = document.getElementById('mg-clear-filters');
   const grid = document.getElementById('mg-products');
   const empty = document.getElementById('mg-products-empty');
@@ -247,6 +250,47 @@ export default async function initProducts() {
     });
   }
 
+  // ── Render style radio buttons ─────────────────────────────────
+  function renderStyleSidebar() {
+    styleFiltersEl.innerHTML = STYLES.map((s) => `
+      <label class="mg-filter-item" for="mg-style-${s.id}">
+        <input
+          class="mg-style-radio"
+          type="radio"
+          name="mg-style"
+          id="mg-style-${s.id}"
+          data-style="${s.id}"
+          ${s.id === selectedStyleId ? 'checked' : ''}
+        />
+        <span class="mg-filter-label">${s.label}</span>
+      </label>`).join('');
+
+    styleFiltersEl.querySelectorAll('.mg-style-radio').forEach((radio) => {
+      radio.addEventListener('change', async () => {
+        if (!radio.checked) return;
+        selectedStyleId = radio.dataset.style;
+        selectedStyle = getStyleById(selectedStyleId);
+        setSelectedStyle(selectedStyleId);
+        // Reset category & brand selections when style changes
+        selectedSlugs.clear();
+        selectedBrands.clear();
+        syncClearBtn();
+        if (titleEl && selectedStyle?.label) {
+          titleEl.textContent = `${selectedStyle.label} екипировка`;
+        }
+        // Reload categories for new style
+        try {
+          const categoriesRaw = await getCategories();
+          const categories = filterCategoriesByStyle(categoriesRaw, selectedStyleId);
+          renderSidebar(categories);
+        } catch {
+          renderSidebar([]);
+        }
+        await load();
+      });
+    });
+  }
+
   clearBtn.addEventListener('click', () => {
     selectedSlugs.clear();
     selectedBrands.clear();
@@ -259,6 +303,8 @@ export default async function initProducts() {
     syncClearBtn();
     load();
   });
+
+  renderStyleSidebar();
 
   // ── Load & display products ──────────────────────────────────
   async function load() {

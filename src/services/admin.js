@@ -99,6 +99,18 @@ export async function adminDeleteProductImage(imageId, storagePath) {
   if (error) throw error;
 }
 
+/**
+ * Updates the sort_order of multiple product images at once.
+ * @param {{id: string, sort_order: number}[]} imageOrders
+ */
+export async function adminUpdateImageSortOrders(imageOrders) {
+  await Promise.all(
+    imageOrders.map(({ id, sort_order }) =>
+      supabase.from('product_images').update({ sort_order }).eq('id', id)
+    )
+  );
+}
+
 // ── Categories ────────────────────────────────────────────────────────────────
 
 export async function adminGetCategories() {

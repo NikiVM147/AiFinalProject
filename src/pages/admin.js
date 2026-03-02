@@ -11,6 +11,7 @@ import {
   adminDeleteProduct,
   adminUploadProductImage,
   adminDeleteProductImage,
+  adminUpdateImageSortOrders,
 } from '@services/admin.js';
 import { formatPrice } from '@utils/helpers.js';
 import { showToast } from '@utils/toast.js';
@@ -150,10 +151,11 @@ function openEditModal(productId) {
 
   if (p.images?.length) {
     wrap.classList.remove('d-none');
-    imgContainer.innerHTML = p.images.map((img) => `
-      <div class="position-relative" data-img-id="${img.id}">
+    imgContainer.innerHTML = p.images.map((img, idx) => `
+      <div class="position-relative mg-img-sortable" data-img-id="${img.id}" draggable="true">
         <img src="${getProductImageUrl(img.path)}" alt="${img.alt ?? ''}"
-             class="rounded border" style="width:72px;height:56px;object-fit:cover;">
+             class="rounded border" style="width:72px;height:56px;object-fit:cover;pointer-events:none;">
+        ${idx === 0 ? `<span class="mg-first-badge position-absolute bottom-0 start-0 badge bg-primary">1-ва</span>` : ''}
         <button
           type="button"
           class="btn btn-danger btn-sm position-absolute top-0 end-0 btn-del-img p-0"
@@ -237,6 +239,18 @@ async function handleFormSubmit(e) {
           showToast(`Снимката "${files[i].name}" не може да се качи: ${imgErr.message}`, 'warning');
         }
       }
+    }
+
+    // Save image sort orders from current DOM order
+    const sortableEls = document.querySelectorAll('#existing-images .mg-img-sortable');
+    if (sortableEls.length) {
+      try {
+        const imageOrders = Array.from(sortableEls).map((el, i) => ({
+          id: el.dataset.imgId,
+          sort_order: i,
+        }));
+        await adminUpdateImageSortOrders(imageOrders);
+      } catch { /* non-fatal */ }
     }
 
     Modal.getOrCreateInstance(document.getElementById('productModal')).hide();
@@ -383,9 +397,60 @@ export default async function initAdmin() {
   document.getElementById('btn-confirm-delete').addEventListener('click', handleConfirmDelete);
 
   // Delete existing image thumbnails (event delegation inside modal)
-  document.getElementById('existing-images').addEventListener('click', (e) => {
+  const existingImagesEl = document.getElementById('existing-images');
+  existingImagesEl.addEventListener('click', (e) => {
     const btn = e.target.closest('.btn-del-img');
     if (btn) handleDeleteExistingImage(btn.dataset.imgId, btn.dataset.imgPath);
+  });
+
+  // ── Image drag-and-drop reordering ────────────────────────────────────────
+  let dragSrcEl = null;
+
+  function refreshFirstBadge() {
+    existingImagesEl.querySelectorAll('.mg-first-badge').forEach((b) => b.remove());
+    const first = existingImagesEl.querySelector('.mg-img-sortable');
+    if (first) {
+      const badge = document.createElement('span');
+      badge.className = 'mg-first-badge position-absolute bottom-0 start-0 badge bg-primary';
+      badge.textContent = '1-ва';
+      first.appendChild(badge);
+    }
+  }
+
+  existingImagesEl.addEventListener('dragstart', (e) => {
+    const item = e.target.closest('.mg-img-sortable');
+    if (!item) return;
+    dragSrcEl = item;
+    e.dataTransfer.effectAllowed = 'move';
+    setTimeout(() => { item.style.opacity = '0.4'; }, 0);
+  });
+
+  existingImagesEl.addEventListener('dragend', () => {
+    if (dragSrcEl) dragSrcEl.style.opacity = '';
+    existingImagesEl.querySelectorAll('.mg-img-sortable').forEach((el) => el.classList.remove('mg-drag-over'));
+    dragSrcEl = null;
+  });
+
+  existingImagesEl.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    const item = e.target.closest('.mg-img-sortable');
+    if (!item || item === dragSrcEl) return;
+    existingImagesEl.querySelectorAll('.mg-img-sortable').forEach((el) => el.classList.remove('mg-drag-over'));
+    item.classList.add('mg-drag-over');
+  });
+
+  existingImagesEl.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const item = e.target.closest('.mg-img-sortable');
+    if (!item || item === dragSrcEl || !dragSrcEl) return;
+    const all = [...existingImagesEl.querySelectorAll('.mg-img-sortable')];
+    const srcIdx = all.indexOf(dragSrcEl);
+    const tgtIdx = all.indexOf(item);
+    if (srcIdx < tgtIdx) item.after(dragSrcEl);
+    else item.before(dragSrcEl);
+    existingImagesEl.querySelectorAll('.mg-img-sortable').forEach((el) => el.classList.remove('mg-drag-over'));
+    refreshFirstBadge();
   });
 
   // Auto-generate slug from name (only when slug is empty or unchanged from last auto)

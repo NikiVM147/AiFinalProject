@@ -2,6 +2,7 @@ import { renderLayout } from './partials/layout.js';
 import { getSession } from '@services/auth.js';
 import { getCart, clearCart } from '@services/cart.js';
 import { createOrderFromCart } from '@services/orders.js';
+import { getMyProfile, getMyDefaultAddress } from '@services/profiles.js';
 import { formatPrice } from '@utils/helpers.js';
 import { getFormValues } from '@utils/validators.js';
 import { showToast } from '@utils/toast.js';
@@ -58,6 +59,21 @@ export default async function initCheckout() {
       </li>
     </ul>
   `;
+
+  // ── Pre-fill form from saved profile + default address ──────
+  try {
+    const [profile, address] = await Promise.all([getMyProfile(), getMyDefaultAddress()]);
+    const fill = (name, value) => {
+      const el = form.elements[name];
+      if (el && value) el.value = value;
+    };
+    fill('full_name', address?.full_name ?? profile?.full_name);
+    fill('phone', address?.phone ?? profile?.phone);
+    fill('line1', address?.line1);
+    fill('line2', address?.line2);
+    fill('city', address?.city);
+    fill('postal_code', address?.postal_code);
+  } catch { /* pre-fill is best-effort */ }
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();

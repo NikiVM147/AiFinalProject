@@ -8,11 +8,13 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "pdfjs-dist": "^3.11.174",
     "vite": "^6.0.0"
   },
   "dependencies": {
-    "bootstrap": "^5.3.3",
     "@popperjs/core": "^2.11.8",
-    "@supabase/supabase-js": "^2.49.1"
+    "@supabase/supabase-js": "^2.49.1",
+    "bootstrap": "^5.3.3",
+    "pdf-parse": "^2.4.5"
   }
 }

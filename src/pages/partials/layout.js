@@ -81,7 +81,7 @@ export async function renderLayout({ title, active }) {
   if (footer) {
     footer.innerHTML = `
       <div class="container text-center">
-        <small>&copy; ${new Date().getFullYear()} Moto Gear Store &mdash; Кари с увереност.</small>
+        <small>&copy; ${new Date().getFullYear()} Moto Gear Store &mdash; Карай с увереност.</small>
       </div>
     `;
   }

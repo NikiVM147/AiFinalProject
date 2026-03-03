@@ -1,5 +1,6 @@
 import { renderLayout } from './partials/layout.js';
 import { signIn, getSession } from '@services/auth.js';
+import { mergeLocalCart } from '@services/cart.js';
 import { getFormValues, isEmail } from '@utils/validators.js';
 import { showToast } from '@utils/toast.js';
 
@@ -33,8 +34,12 @@ export default async function initLogin() {
 
     try {
       await signIn(values.email, values.password);
+      await mergeLocalCart();
       showToast('Влязохте успешно.', 'success');
-      window.location.href = '/src/pages/account.html';
+      // Return to previous page if came from checkout/cart, otherwise account
+      const returnTo = sessionStorage.getItem('mg_login_return');
+      sessionStorage.removeItem('mg_login_return');
+      window.location.href = returnTo ?? '/src/pages/account.html';
     } catch (err) {
       showError(signInError, err?.message ?? 'Грешка при вход.');
     }

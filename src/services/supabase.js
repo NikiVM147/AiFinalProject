@@ -4,10 +4,13 @@ const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL;
 const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
-  // Fail fast in development; in production this should always be set.
-  console.warn(
-    '[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY in environment.'
+  console.error(
+    '[supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY. ' +
+    'Set these environment variables in your .env file (local) or in Netlify → Site configuration → Environment variables (production).'
   );
 }
 
-export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+export const supabase = createClient(
+  SUPABASE_URL ?? 'https://placeholder.supabase.co',
+  SUPABASE_ANON_KEY ?? 'placeholder-key'
+);

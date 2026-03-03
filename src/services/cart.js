@@ -179,6 +179,30 @@ export async function updateCartItem({ cartItemId, quantity }) {
   if (error) throw error;
 }
 
+/**
+ * After login: merges guest localStorage cart into the authenticated Supabase cart,
+ * then clears localStorage.
+ */
+export async function mergeLocalCart() {
+  const localCart = readLocalCart();
+  const items = localCart.items ?? [];
+  if (!items.length) return;
+
+  for (const item of items) {
+    try {
+      await addToCart({
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPriceCents: item.unitPriceCents,
+      });
+    } catch {
+      // best-effort — skip items that fail (e.g. out of stock)
+    }
+  }
+
+  writeLocalCart({ items: [] });
+}
+
 export async function removeCartItem({ cartItemId }) {
   const { data } = await supabase.auth.getUser();
   const user = data.user;

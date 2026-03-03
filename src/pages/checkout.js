@@ -16,6 +16,7 @@ export default async function initCheckout() {
 
   const session = await getSession();
   if (!session) {
+    sessionStorage.setItem('mg_login_return', '/src/pages/checkout.html');
     window.location.href = '/src/pages/login.html';
     return;
   }

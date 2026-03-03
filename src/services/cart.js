@@ -179,6 +179,21 @@ export async function updateCartItem({ cartItemId, quantity }) {
   if (error) throw error;
 }
 
+export async function removeCartItem({ cartItemId }) {
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
+
+  if (!user) {
+    const cart = readLocalCart();
+    cart.items = cart.items.filter((i) => i.productId !== cartItemId);
+    writeLocalCart(cart);
+    return;
+  }
+
+  const { error } = await supabase.from('cart_items').delete().eq('id', cartItemId);
+  if (error) throw error;
+}
+
 export async function clearCart() {
   const { data } = await supabase.auth.getUser();
   const user = data.user;

@@ -14,6 +14,8 @@ import {
   adminUpdateImageSortOrders,
   adminCreateCategory,
   adminDeleteCategory,
+  adminGetAllOrders,
+  adminUpdateOrderStatus,
 } from '@services/admin.js';
 import { formatPrice } from '@utils/helpers.js';
 import { showToast } from '@utils/toast.js';
@@ -420,6 +422,9 @@ export default async function initAdmin() {
   document.getElementById('tab-cats-btn').addEventListener('shown.bs.tab', () => {
     document.getElementById('btn-add-product').classList.add('d-none');
   });
+  document.getElementById('tab-orders-btn').addEventListener('shown.bs.tab', () => {
+    document.getElementById('btn-add-product').classList.add('d-none');
+  });
   document.getElementById('tab-products-btn').addEventListener('shown.bs.tab', () => {
     document.getElementById('btn-add-product').classList.remove('d-none');
   });
@@ -615,4 +620,126 @@ export default async function initAdmin() {
   });
 
   await loadCategories();
+
+  // ── Orders tab ────────────────────────────────────────────────────────────
+
+  let allOrders = [];
+  let ordersSearchQ = '';
+  let ordersStatusFilter = '';
+
+  const ordersLoadEl   = document.getElementById('orders-loading');
+  const ordersTableEl  = document.getElementById('orders-table-wrap');
+  const ordersListEl   = document.getElementById('orders-list');
+  const ordersEmptyEl  = document.getElementById('orders-empty');
+  const ordersErrorEl  = document.getElementById('orders-error');
+
+  const STATUS_LABELS = {
+    pending:   { label: 'Изчакваща', cls: 'text-bg-warning' },
+    paid:      { label: 'Платена',   cls: 'text-bg-success' },
+    shipped:   { label: 'Изпратена', cls: 'text-bg-info'    },
+    cancelled: { label: 'Отказана',  cls: 'text-bg-danger'  },
+  };
+
+  function renderOrders(list) {
+    if (!list.length) {
+      ordersTableEl.classList.add('d-none');
+      ordersEmptyEl.classList.remove('d-none');
+      return;
+    }
+    ordersEmptyEl.classList.add('d-none');
+    ordersTableEl.classList.remove('d-none');
+
+    ordersListEl.innerHTML = list.map((o) => {
+      const client = o.profile?.full_name || o.user_id.slice(0, 8) + '…';
+      const date   = new Date(o.created_at).toLocaleDateString('bg-BG');
+      const total  = formatPrice(o.total_cents, o.currency);
+      const items  = (o.items ?? []).map((i) => `${i.product_name} ×${i.quantity}`).join(', ') || '—';
+      const statusInfo = STATUS_LABELS[o.status] ?? { label: o.status, cls: 'text-bg-secondary' };
+
+      const options = Object.entries(STATUS_LABELS).map(([val, { label }]) =>
+        `<option value="${val}" ${val === o.status ? 'selected' : ''}>${label}</option>`
+      ).join('');
+
+      return `
+        <tr>
+          <td class="small text-muted font-monospace">${o.id.slice(0, 8)}…</td>
+          <td class="small">${client}</td>
+          <td class="small">${date}</td>
+          <td class="text-end small">${total}</td>
+          <td class="small text-muted" style="max-width:220px;white-space:normal">${items}</td>
+          <td>
+            <select class="form-select form-select-sm order-status-select" data-order-id="${o.id}" style="min-width:130px">
+              ${options}
+            </select>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function applyOrderFilters() {
+    const q = ordersSearchQ.toLowerCase();
+    const s = ordersStatusFilter;
+    const filtered = allOrders.filter((o) => {
+      const matchStatus = !s || o.status === s;
+      const matchSearch = !q || [
+        o.id,
+        o.profile?.full_name,
+        o.profile?.phone,
+      ].some((v) => v && v.toLowerCase().includes(q));
+      return matchStatus && matchSearch;
+    });
+    renderOrders(filtered);
+  }
+
+  async function loadOrders() {
+    ordersLoadEl.classList.remove('d-none');
+    ordersTableEl.classList.add('d-none');
+    ordersEmptyEl.classList.add('d-none');
+    ordersErrorEl.classList.add('d-none');
+    try {
+      allOrders = await adminGetAllOrders();
+      applyOrderFilters();
+    } catch (err) {
+      ordersErrorEl.textContent = err.message ?? 'Грешка при зареждане на поръчки.';
+      ordersErrorEl.classList.remove('d-none');
+    } finally {
+      ordersLoadEl.classList.add('d-none');
+    }
+  }
+
+  // Load orders when tab is first shown
+  document.getElementById('tab-orders-btn').addEventListener('shown.bs.tab', () => {
+    if (!allOrders.length) loadOrders();
+  });
+
+  // Search + status filter
+  document.getElementById('orders-search').addEventListener('input', (e) => {
+    ordersSearchQ = e.target.value;
+    applyOrderFilters();
+  });
+  document.getElementById('orders-status-filter').addEventListener('change', (e) => {
+    ordersStatusFilter = e.target.value;
+    applyOrderFilters();
+  });
+
+  // Inline status change
+  document.getElementById('orders-list').addEventListener('change', async (e) => {
+    const sel = e.target.closest('.order-status-select');
+    if (!sel) return;
+    const orderId = sel.dataset.orderId;
+    const newStatus = sel.value;
+    sel.disabled = true;
+    try {
+      await adminUpdateOrderStatus(orderId, newStatus);
+      const order = allOrders.find((o) => o.id === orderId);
+      if (order) order.status = newStatus;
+      showToast('Статусът е обновен.', 'success');
+    } catch (err) {
+      showToast(err.message ?? 'Грешка при обновяване на статус.', 'danger');
+      // revert
+      applyOrderFilters();
+    } finally {
+      sel.disabled = false;
+    }
+  });
 }

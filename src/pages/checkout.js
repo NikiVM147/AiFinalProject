@@ -63,6 +63,11 @@ export default async function initCheckout() {
     e.preventDefault();
     errorEl.classList.add('d-none');
 
+    if (!form.checkValidity()) {
+      form.reportValidity();
+      return;
+    }
+
     const values = getFormValues(form);
 
     try {

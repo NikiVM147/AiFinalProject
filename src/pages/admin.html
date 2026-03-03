@@ -30,6 +30,9 @@
         <li class="nav-item" role="presentation">
           <button class="nav-link" id="tab-cats-btn" data-bs-toggle="tab" data-bs-target="#tab-cats" type="button" role="tab">Категории</button>
         </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="tab-orders-btn" data-bs-toggle="tab" data-bs-target="#tab-orders" type="button" role="tab">Поръчки</button>
+        </li>
       </ul>
 
       <div class="tab-content">
@@ -99,6 +102,47 @@
               <div id="cat-loading" class="text-muted small">Зареждане…</div>
               <ul id="cat-list" class="list-group list-group-flush d-none"></ul>
               <div id="cat-empty" class="text-muted small d-none">Няма категории.</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ── Orders tab ── -->
+        <div class="tab-pane fade" id="tab-orders" role="tabpanel">
+          <!-- Filters -->
+          <div class="row g-2 mb-3">
+            <div class="col-12 col-sm-6">
+              <input type="search" class="form-control" id="orders-search" placeholder="Търси по клиент, ID…" autocomplete="off" />
+            </div>
+            <div class="col-12 col-sm-3">
+              <select class="form-select" id="orders-status-filter">
+                <option value="">— Всички статуси —</option>
+                <option value="pending">Изчакваща</option>
+                <option value="paid">Платена</option>
+                <option value="shipped">Изпратена</option>
+                <option value="cancelled">Отказана</option>
+              </select>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-body p-0">
+              <div id="orders-loading" class="text-center py-5 text-muted">Зареждане на поръчки…</div>
+              <div class="table-responsive d-none" id="orders-table-wrap">
+                <table class="table table-hover align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Клиент</th>
+                      <th>Дата</th>
+                      <th class="text-end">Сума</th>
+                      <th>Артикули</th>
+                      <th>Статус</th>
+                    </tr>
+                  </thead>
+                  <tbody id="orders-list"></tbody>
+                </table>
+              </div>
+              <div id="orders-empty" class="text-center py-5 text-muted d-none">Няма намерени поръчки.</div>
+              <div id="orders-error" class="alert alert-danger m-3 d-none"></div>
             </div>
           </div>
         </div>

@@ -142,3 +142,37 @@ export async function adminDeleteCategory(id) {
 
   if (error) throw error;
 }
+
+// ── Orders ────────────────────────────────────────────────────────────────────
+
+export async function adminGetAllOrders() {
+  const { data: orders, error } = await supabase
+    .from('orders')
+    .select(`
+      id, user_id, status, total_cents, currency, shipping_address, created_at, updated_at,
+      items:order_items(id, product_name, unit_price_cents, quantity)
+    `)
+    .order('created_at', { ascending: false });
+
+  if (error) throw error;
+
+  const userIds = [...new Set((orders ?? []).map((o) => o.user_id))];
+  let profileMap = {};
+  if (userIds.length) {
+    const { data: profiles } = await supabase
+      .from('profiles')
+      .select('user_id, full_name, phone')
+      .in('user_id', userIds);
+    (profiles ?? []).forEach((p) => { profileMap[p.user_id] = p; });
+  }
+
+  return (orders ?? []).map((o) => ({ ...o, profile: profileMap[o.user_id] ?? null }));
+}
+
+export async function adminUpdateOrderStatus(orderId, status) {
+  const { error } = await supabase
+    .from('orders')
+    .update({ status })
+    .eq('id', orderId);
+  if (error) throw error;
+}

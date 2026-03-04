@@ -2,9 +2,7 @@
 
 A fully functional **multi-page motorcycle gear e-commerce app** built with Vanilla JavaScript, Bootstrap 5, Vite, and Supabase.
 
-**Live URL:** _https://your-deploy-url.netlify.app_  
-**Demo credentials:** `demo@nvmoto.com` / `demo123`
-
+**Live URL:** https://nvmoto.netlify.app/
 ---
 
 ## What the App Does

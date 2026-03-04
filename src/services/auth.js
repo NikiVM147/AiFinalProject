@@ -23,6 +23,8 @@ export async function signUp(email, password, metadata = {}) {
       },
     });
     if (error) throw error;
+    // Clear the auto-created session so the user must log in explicitly
+    await supabase.auth.signOut();
     return data;
   } catch (err) {
     throw err;

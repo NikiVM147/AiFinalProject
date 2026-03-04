@@ -38,7 +38,8 @@ export default async function initRegister() {
 
     try {
       await signUp(values.email, values.password, { full_name: values.full_name });
-      showToast('Акаунтът е създаден. Провери имейла си, ако е необходимо потвърждение.', 'success');
+      showToast('Акаунтът е създаден.', 'success');
+      window.location.href = '/src/pages/login.html';
     } catch (err) {
       showError(signUpError, err?.message ?? 'Грешка при регистрация.');
     }

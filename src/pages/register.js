@@ -1,5 +1,5 @@
 import { renderLayout } from './partials/layout.js';
-import { signUp, getSession } from '@services/auth.js';
+import { signUp } from '@services/auth.js';
 import { getFormValues, isEmail, minLength } from '@utils/validators.js';
 import { showToast } from '@utils/toast.js';
 
@@ -10,12 +10,6 @@ function showError(el, message) {
 
 export default async function initRegister() {
   await renderLayout({ title: 'Регистрация — Moto Gear Store', active: 'login' });
-
-  const session = await getSession();
-  if (session) {
-    window.location.href = '/src/pages/account.html';
-    return;
-  }
 
   const signUpForm = document.getElementById('mg-signup');
   const signUpError = document.getElementById('mg-signup-error');
